@@ -6,3 +6,8 @@ README.md
 {{ if ne .chezmoi.os "darwin" }}
 Library/Preferences
 {{ end }}
+{{ if ne .chezmoi.os "android" }}
+.termux
+.shortcuts
+.local/bin/desktop-session
+{{ end }}

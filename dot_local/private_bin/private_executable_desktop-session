@@ -1,0 +1,30 @@
+#!/data/data/com.termux/files/usr/bin/bash
+
+if [ ! -z $(pgrep xfce4-session) ]; then
+	termux-toast XFCE already running
+	exit 1
+fi
+
+# Launch Termux X11 main activity
+am start --user 0 -n com.termux.x11/com.termux.x11.MainActivity
+
+# Scale app resolution
+# https://discovery.endeavouros.com/desktop-environments/xfce-hi-dpi-screens/2021/06/
+export QT_QPA_PLATFORMTHEME=qt5ct
+export QT_SCALE_FACTOR=2
+export QT_STYLE_OVERRIDE=kvantum
+export QT_AUTO_SCREEN_SCALE_FACTOR=X11
+export QT_ENABLE_HIGHDPI_SCALING=1
+
+# Uncomment for debugging
+# export XFSM_VERBOSE=1
+
+# Run XFCE4 Desktop
+#xfce4-session
+startxfce4
+EXIT_STATUS="$?"
+
+# Exit Termux X11 app
+am broadcast -a com.termux.x11.ACTION_STOP -p com.termux.x11
+
+exit "$EXIT_STATUS"

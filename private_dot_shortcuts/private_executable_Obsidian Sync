@@ -1,0 +1,3 @@
+#!/data/data/com.termux/files/usr/bin/zsh
+source ~/.zshrc
+zsh ~/Obsidian/.bin/gitsync

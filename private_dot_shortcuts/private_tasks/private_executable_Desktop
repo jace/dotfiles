@@ -1,0 +1,10 @@
+#!/data/data/com.termux/files/usr/bin/bash
+if [ -z $(pgrep -f com.termux.x11) ]; then
+	#export PATH="$HOME/.local/bin:$PATH"
+	export TERMUX_X11_XSTARTUP="dbus-launch --exit-with-session $HOME/.local/bin/desktop-session"
+	export XDG_RUNTIME_DIR=${TMPDIR}
+	termux-x11 -dpi 120
+else
+	termux-toast Desktop already running
+	am start --user 0 -n com.termux.x11/com.termux.x11.MainActivity
+fi

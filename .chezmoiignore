@@ -1,0 +1,7 @@
+README.md
+{{- if eq .chezmoi.os "darwin" }}
+.oh-my-zsh/custom/themes/powerlevel10k
+{{- end }}
+{{ if ne .chezmoi.os "darwin" }}
+Library/Preferences
+{{ end }}

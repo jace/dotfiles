@@ -1,4 +1,5 @@
 README.md
+.oh-my-zsh/cache
 {{- if eq .chezmoi.os "darwin" }}
 .oh-my-zsh/custom/themes/powerlevel10k
 {{- end }}

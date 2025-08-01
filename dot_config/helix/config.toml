@@ -1,0 +1,35 @@
+theme = "base16_terminal"
+
+[editor]
+line-number = "relative"
+cursorline = true
+color-modes = true
+rulers = [80, 88]
+bufferline = "always"
+
+[editor.cursor-shape]
+insert = "bar"
+normal = "block"
+select = "underline"
+
+[editor.lsp]
+enable = true
+display-inlay-hints = true
+
+[editor.whitespace.render]
+space = "none"
+nbsp = "all"
+tab = "all"
+newline = "none"
+
+[editor.whitespace.characters]
+space = "·"
+nbsp = "⍽"
+tab = "→"
+newline = "⏎"
+tabpad = "·"  # Tabs will look like "→···" (depending on tab width)
+
+[editor.indent-guides]
+render = true
+character = "┊" # Some characters that work well: "▏", "╎", "┆", "┊", "⸽"
+skip-levels = 1

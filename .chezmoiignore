@@ -11,4 +11,5 @@ Library/Preferences
 .termux
 .shortcuts
 .local/bin/desktop-session
+.local/bin/termux-full-backup
 {{ end }}

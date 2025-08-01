@@ -1,0 +1,17 @@
+#!/data/data/com.termux/files/usr/bin/bash
+
+cd
+
+date="$(date +%Y-%m-%d)"
+device="$(echo $(getprop ro.product.manufacturer) $(getprop ro.product.model) | sed 's/[^A-Z0-9_-]/-/ig')"
+backup_usr="/sdcard/backups/Termux/$device-backup-usr-$date.tar.gz"
+backup_home="/sdcard/backups/Termux/$device-backup-home-$date.tar.gz"
+
+if [ ! -e "$backup_usr" ]; then
+  echo -e ${Color_BGreen}Backing up Termux...${Color_Off}
+  termux-backup "$backup_usr"
+fi
+if [ ! -e "$backup_home" ]; then
+  echo -e ${Color_BGreen}Backing up home...${Color_Off}
+  tar -cf - -C .. ./home | pv -s $(du -sb . | cut -f1) | gzip > "$backup_home"
+fi

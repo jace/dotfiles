@@ -90,25 +90,25 @@ ZSH_CUSTOM="$HOME/.oh-my-zsh-custom"
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
+  gnu-utils
+  git
+  gh
   chezmoi
   colored-man-pages
   command-not-found
   direnv
   docker
   eza
-  fast-syntax-highlighting
-  forgit
   fzf
   fzf-tab
   fzf-tab-source
-  gh
-  git
-  gnu-utils
+  forgit
   iterm2
   pip
   zoxide
   zsh-autosuggestions
   zsh-shift-select
+  fast-syntax-highlighting
 )
 
 # User configuration

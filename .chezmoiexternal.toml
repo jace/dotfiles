@@ -3,13 +3,6 @@ type = "git-repo"
 url = "https://github.com/ohmyzsh/ohmyzsh.git"
 refreshPeriod = "168h"
 
-#[".oh-my-zsh"]
-#type = "archive"
-#url = "https://github.com/ohmyzsh/ohmyzsh/archive/master.tar.gz"
-#exact = true
-#stripComponents = 1
-#refreshPeriod = "168h"
-
 [".oh-my-zsh-custom/themes/powerlevel10k"]
 type = "git-repo"
 url = "https://github.com/romkatv/powerlevel10k.git"
@@ -28,6 +21,11 @@ refreshPeriod = "168h"
 [".oh-my-zsh-custom/plugins/fzf-tab-source"]
 type = "git-repo"
 url = "https://github.com/Freed-Wu/fzf-tab-source.git"
+refreshPeriod = "168h"
+
+[".oh-my-zsh-custom/plugins/forgit"]
+type = "git-repo"
+url = "https://github.com/wfxr/forgit.git"
 refreshPeriod = "168h"
 
 [".oh-my-zsh-custom/plugins/zsh-shift-select"]

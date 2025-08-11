@@ -1,4 +1,3 @@
-if (( ! $+commands[mcfly] )); then
-  return
+if (( $+commands[mcfly] )); then
+  eval "$(mcfly init zsh)"
 fi
-eval "$(mcfly init zsh)"

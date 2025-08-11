@@ -25,9 +25,9 @@ type = "git-repo"
 url = "https://github.com/Aloxaf/fzf-tab.git"
 refreshPeriod = "168h"
 
-[".oh-my-zsh-custom/plugins/you-should-use"]
+[".oh-my-zsh-custom/plugins/fzf-tab-source"]
 type = "git-repo"
-url = "https://github.com/MichaelAquilina/zsh-you-should-use.git"
+url = "https://github.com/Freed-Wu/fzf-tab-source.git"
 refreshPeriod = "168h"
 
 [".oh-my-zsh-custom/plugins/zsh-shift-select"]
@@ -39,7 +39,6 @@ refreshPeriod = "168h"
 type = "git-repo"
 url = "https://github.com/zsh-users/zsh-autosuggestions.git"
 refreshPeriod = "168h"
-
 
 # ["/.oh-my-zsh-custom/plugins/git-extras"]
 # type = "git-repo"

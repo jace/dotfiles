@@ -1,7 +1,7 @@
-#[".oh-my-zsh"]
-#type = "git-repo"
-#url = "https://github.com/ohmyzsh/ohmyzsh.git"
-#refreshPeriod = "168h"
+[".oh-my-zsh"]
+type = "git-repo"
+url = "https://github.com/ohmyzsh/ohmyzsh.git"
+refreshPeriod = "168h"
 
 #[".oh-my-zsh"]
 #type = "archive"
@@ -10,102 +10,108 @@
 #stripComponents = 1
 #refreshPeriod = "168h"
 
-[".oh-my-zsh/custom/themes/powerlevel10k"]
+[".oh-my-zsh-custom/themes/powerlevel10k"]
 type = "git-repo"
 url = "https://github.com/romkatv/powerlevel10k.git"
 refreshPeriod = "168h"
 
-[".oh-my-zsh/custom/plugins/fast-syntax-highlighting"]
+[".oh-my-zsh-custom/plugins/fast-syntax-highlighting"]
 type = "git-repo"
 url = "https://github.com/zdharma-continuum/fast-syntax-highlighting.git"
 refreshPeriod = "168h"
 
-[".oh-my-zsh/custom/plugins/fzf-tab"]
+[".oh-my-zsh-custom/plugins/fzf-tab"]
 type = "git-repo"
 url = "https://github.com/Aloxaf/fzf-tab.git"
 refreshPeriod = "168h"
 
-[".oh-my-zsh/custom/plugins/you-should-use"]
+[".oh-my-zsh-custom/plugins/you-should-use"]
 type = "git-repo"
 url = "https://github.com/MichaelAquilina/zsh-you-should-use.git"
 refreshPeriod = "168h"
 
-[".oh-my-zsh/custom/plugins/zsh-shift-select"]
+[".oh-my-zsh-custom/plugins/zsh-shift-select"]
 type = "git-repo"
 url = "https://github.com/jirutka/zsh-shift-select.git"
 refreshPeriod = "168h"
 
-# ["/.oh-my-zsh/custom/plugins/git-extras"]
+[".oh-my-zsh-custom/plugins/zsh-autosuggestions"]
+type = "git-repo"
+url = "https://github.com/zsh-users/zsh-autosuggestions.git"
+refreshPeriod = "168h"
+
+
+# ["/.oh-my-zsh-custom/plugins/git-extras"]
 # type = "git-repo"
 # url = "https://github.com/tj/git-extras.git"
 # refreshPeriod = "168h"
 
-# ["/.oh-my-zsh/custom/plugins/git-flow"]
+# ["/.oh-my-zsh-custom/plugins/git-flow"]
 # type = "git-repo"
 # url = "https://github.com/bobthecow/git-flow-completion.git"
 # refreshPeriod = "168h"
 
-# ["/.oh-my-zsh/custom/plugins/git-prompt"]
+# ["/.oh-my-zsh-custom/plugins/git-prompt"]
 # type = "git-repo"
 # url = "https://github.com/olivierverdier/zsh-git-prompt.git"
 # refreshPeriod = "168h"
 
-# ["/.oh-my-zsh/custom/plugins/history-substring-search"]
+# ["/.oh-my-zsh-custom/plugins/history-substring-search"]
 # type = "git-repo"
 # url = "https://github.com/zsh-users/zsh-history-substring-search.git"
 # refreshPeriod = "168h"
 
-# ["/.oh-my-zsh/custom/plugins/kubectl"]
+# ["/.oh-my-zsh-custom/plugins/kubectl"]
 # type = "git-repo"
 # url = "https://github.com/zsh-users/zsh-completions.git"
 # refreshPeriod = "168h"
 
-# ["/.oh-my-zsh/custom/plugins/nvm"]
+# ["/.oh-my-zsh-custom/plugins/nvm"]
 # type = "git-repo"
 # url = "https://github.com/lukechilds/zsh-nvm.git"
 # refreshPeriod = "168h"
 
-# ["/.oh-my-zsh/custom/plugins/pipx"]
+# ["/.oh-my-zsh-custom/plugins/pipx"]
 # type = "git-repo"
 # url = "https://github.com/pipxproject/pipx.git"
 # refreshPeriod = "168h"
 
-# ["/.oh-my-zsh/custom/plugins/python"]
+# ["/.oh-my-zsh-custom/plugins/python"]
 # type = "git-repo"
 # url = "https://github.com/ohmyzsh/ohmyzsh.git"
 # refreshPeriod = "168h"
 
-# ["/.oh-my-zsh/custom/plugins/rbenv"]
+# ["/.oh-my-zsh-custom/plugins/rbenv"]
 # type = "git-repo"
 # url = "https://github.com/rbenv/rbenv.git"
 # refreshPeriod = "168h"
 
-# ["/.oh-my-zsh/custom/plugins/rust"]
+# ["/.oh-my-zsh-custom/plugins/rust"]
 # type = "git-repo"
 # url = "https://github.com/rust-lang/rustup.git"
 # refreshPeriod = "168h"
 
-# ["/.oh-my-zsh/custom/plugins/yarn"]
+# ["/.oh-my-zsh-custom/plugins/yarn"]
 # type = "git-repo"
 # url = "https://github.com/ohmyzsh/ohmyzsh.git"
 # refreshPeriod = "168h"
 
-# ["/.oh-my-zsh/custom/plugins/z"]
+# ["/.oh-my-zsh-custom/plugins/z"]
 # type = "git-repo"
 # url = "https://github.com/rupa/z.git"
 # refreshPeriod = "168h"
 
-# ["/.oh-my-zsh/custom/themes/pure"]
+# ["/.oh-my-zsh-custom/themes/pure"]
 # type = "git-repo"
 # url = "https://github.com/sindresorhus/pure.git"
 # refreshPeriod = "168h"
 
-# ["/.oh-my-zsh/custom/themes/pure-prompt"]
+# ["/.oh-my-zsh-custom/themes/pure-prompt"]
 # type = "git-repo"
 # url = "https://github.com/sindresorhus/pure.git"
 # refreshPeriod = "168h"
 
-# ["/.oh-my-zsh/custom/themes/pure-theme"]
+# ["/.oh-my-zsh-custom/themes/pure-theme"]
 # type = "git-repo"
 # url = "https://github.com/sindresorhus/pure.git"
 # refreshPeriod = "168h"

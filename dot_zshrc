@@ -142,7 +142,6 @@ zstyle ':omz:plugins:iterm2' 'shell-integration' yes
 zstyle ':omz:plugins:eza' 'git-status' yes
 zstyle ':omz:plugins:eza' 'icons' yes
 zstyle ':omz:plugins:eza' 'color-scale' all
-zstyle ':omz:plugins:eza' 'size-prefix' binary
 source $ZSH/oh-my-zsh.sh
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.

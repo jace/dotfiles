@@ -139,6 +139,7 @@ export LC_CTYPE="en_US.UTF-8"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
 zstyle ':omz:plugins:iterm2' 'shell-integration' yes
+zstyle ':omz:plugins:eza' 'dirs-first' yes
 zstyle ':omz:plugins:eza' 'git-status' yes
 zstyle ':omz:plugins:eza' 'icons' yes
 zstyle ':omz:plugins:eza' 'color-scale' all

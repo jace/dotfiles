@@ -1427,6 +1427,8 @@ The script should do this: \(ai.prompt)</string>
 			<integer>-1</integer>
 			<key>Scrollback Lines</key>
 			<integer>0</integer>
+			<key>Scrollback in Alternate Screen</key>
+			<false/>
 			<key>Selected Text Color</key>
 			<dict>
 				<key>Alpha Component</key>
@@ -2716,6 +2718,8 @@ The script should do this: \(ai.prompt)</string>
 			<integer>-1</integer>
 			<key>Scrollback Lines</key>
 			<integer>10000</integer>
+			<key>Scrollback in Alternate Screen</key>
+			<false/>
 			<key>Selected Text Color</key>
 			<dict>
 				<key>Alpha Component</key>

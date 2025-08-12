@@ -1,0 +1,104 @@
+#!/bin/bash
+
+if [[ -z "$1" ]]; then
+  # Don't process stdin
+  exit 1
+fi
+
+# Check for all commands required to process
+has_cmd() {
+  for opt in "$@"; do
+    if command -v "$opt" >/dev/null; then
+      continue
+    else
+      return $?
+    fi
+  done
+}
+
+# Map batcat to bat
+if ! has_cmd bat && has_cmd batcat; then
+  alias bat=batcat
+fi
+
+# Start analysis. Is this a directory?
+if [ -d "$1" ]; then
+  if has_cmd eza; then
+    eza -hlA --git --color=always --icons=always -- "$1" && exit || exit 1
+  elif has_cmd lsd; then
+    lsd --hlA -git --color=always --icon=always -- "$1" && exit || exit 1
+    exit
+  else
+    ls -hlA --color=always -- "$1" && exit || exit 1
+    exit
+  fi
+fi
+
+# Is this a file?
+if [ -f "$1" ]; then
+  # Examine file for type (this can return multiple lines for macOS universal binaries, so limit to first)
+  mime=$(file -Lb --mime-type "$1" | head -1)
+  category=${mime%%/*}
+  kind=${mime##*/}
+  ext=${1##*.}
+
+  if [ "$mime" = "application/pdf" ]; then
+    if has_cmd pdftotext; then
+      pdftotext -layout -- "$1" && exit || exit 1
+    fi
+  elif [ "$mime" = "application/vnd.sqlite3" ]; then
+    if has_cmd yes sqlite3 bat; then
+      echo -e '.schema\n.dump\n.q' | sqlite3 -- "$1" | bat --color=always --pager=never --style=plain -plsql && exit || exit 1
+    fi
+  elif [ "$kind" == "json" ]; then
+    if [ "$ext" = ipynb ] && has_cmd jupyter bat; then
+      jupyter nbconvert --to python --stdout -- "$1" | bat --color=always --pager=never --style=plain -plpython && exit || exit 1
+    fi
+    if has_cmd jq; then
+      jq -Cr . -- "$1" && exit || exit 1
+    fi
+  elif [ "$category" = "image" ]; then
+    if [ "$kind" != "heic" ] && has_cmd chafa; then
+      chafa -f symbols -- "$1" && exit || exit 1
+    elif has_cmd timg; then
+      timg --loops=1 --frames=1 -- "$1" 2>/dev/null || timg -g80x25 --loops=1 --frames=1 -- "$1" && exit || exit 1
+    elif has_cmd exiftool bat; then
+      exiftool -- "$1" | bat --color=always --pager=never --style=plain -plyaml && exit || exit 1
+    fi
+  elif [ "$category" = "video" ]; then
+    if has_cmd timg; then
+      timg --loops=1 --frames=1 -- "$1" 2>/dev/null || timg -g80x25 --loops=1 --frames=1 -- "$1" && exit || exit 1
+    elif has_cmd exiftool bat; then
+      exiftool -- "$1" | bat --color=always --pager=never --style=plain -plyaml && exit || exit 1
+    fi
+  elif [ "$category" = "text" ]; then
+    if [ "$ext" = "md" ]; then
+      if has_cmd glow; then
+        glow -- "$1" && exit || exit 1
+      elif has_cmd mdless; then
+        mdless -c -P --images=local -- "$1" && exit || exit 1
+      fi
+    fi
+    if [ "$kind" != "plain" ] && [ "$kind" != "xml" ]; then
+      # Not text/plain. Try pandoc
+      if has_cmd pandoc; then
+        pandoc --to=ansi -- "$1" && exit || exit 1
+      fi
+    fi
+    # Unknown text? Let bat handle it
+    if has_cmd bat; then
+      bat --color=always --pager=never --style=plain -- "$1" && exit || exit 1
+    fi
+    # No processor for text/*
+    exit 1
+  fi
+  # Not text. Try fq
+  if has_cmd fq; then
+    fq -C -- display "$1" 2>/dev/null && exit || exit 1
+  fi
+  # Nothing available for this file
+  exit 1
+fi
+
+# Not a file
+exit 1

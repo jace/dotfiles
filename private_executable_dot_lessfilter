@@ -44,7 +44,7 @@ if [ -f "$1" ]; then
 
   if [ "$mime" = "application/pdf" ]; then
     if has_cmd timg; then
-      timg -pq -- "$1" 2>/dev/null || timg -pq -g80x25 -- "$1" && exit || exit 1
+      timg -pq -g${COLUMNS:-80}x${LINES:-25} -- "$1" && exit || exit 1
     fi
     exit 1
   elif [ "$mime" = "application/vnd.sqlite3" ]; then
@@ -58,14 +58,14 @@ if [ -f "$1" ]; then
     if [ "$kind" != "heic" ] && has_cmd chafa; then
       chafa -f symbols -- "$1" && exit || exit 1
     elif has_cmd timg; then
-      timg -pq --loops=1 --frames=1 -- "$1" 2>/dev/null || timg -pq -g80x25 --loops=1 --frames=1 -- "$1" && exit || exit 1
+      timg -pq -g${COLUMNS:-80}x${LINES:-25} --loops=1 --frames=1 -- "$1" && exit || exit 1
     elif has_cmd exiftool bat; then
       exiftool -- "$1" | bat --color=always -Ppl yaml && exit || exit 1
     fi
     exit 1
   elif [ "$category" = "video" ]; then
     if has_cmd timg; then
-      timg -pq --loops=1 --frames=1 -- "$1" 2>/dev/null || timg -pq -g80x25 --loops=1 --frames=1 -- "$1" && exit || exit 1
+      timg -pq -g${COLUMNS:-80}x${LINES:-25} --loops=1 --frames=1 -- "$1" && exit || exit 1
     elif has_cmd exiftool bat; then
       exiftool -- "$1" | bat --color=always -Ppl yaml && exit || exit 1
     fi

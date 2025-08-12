@@ -1,10 +1,15 @@
+# Customize shift-select's bindkeys
+
 function shift-select::cut {
   zle kill-region
   zle -K main
+  # Also transfer to system clipboard
   if [ -n "$(command -v it2copy)" ]; then
+    # If in iTerm2, use its utility function
     printf "%s" "$CUTBUFFER" | it2copy
-  elif [ -n "$(command -v pbcopy)" ]; then
-    printf "%s" "$CUTBUFFER" | pbcopy
+  elif [ -n "$(command -v clipcopy)" ]; then
+    # Else use host's clipboard tool
+    printf "%s" "$CUTBUFFER" | clipcopy
   fi
 }
 zle -N shift-select::cut
@@ -12,10 +17,13 @@ zle -N shift-select::cut
 function shift-select::copy {
   zle copy-region-as-kill -w
   zle -K main
+  # Also transfer to system clipboard
   if [ -n "$(command -v it2copy)" ]; then
+    # If in iTerm2, use its utility function
     printf "%s" "$CUTBUFFER" | it2copy
-  elif [ -n "$(command -v pbcopy)" ]; then
-    printf "%s" "$CUTBUFFER" | pbcopy
+  elif [ -n "$(command -v clipcopy)" ]; then
+    # Else use host's clipboard tool
+    printf "%s" "$CUTBUFFER" | clipcopy
   fi
 }
 zle -N shift-select::copy
@@ -24,6 +32,8 @@ function shift-select::paste {
   zle kill-region
   zle yank
   zle yank-pop
+  # TODO: Use the more recent of system clipboard and kill buffer, except neither
+  # has age records
   zle -K main
 }
 zle -N shift-select::paste

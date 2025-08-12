@@ -1,7 +1,43 @@
-if [ -x /opt/homebrew/bin/brew ]; then
-  eval "$(/opt/homebrew/bin/brew shellenv)"
-
-  if type brew &>/dev/null; then
-    FPATH="$(brew --prefix)/share/zsh/site-functions:$(brew --prefix)/share/zsh-completions:$FPATH"
-  fi
+# Setup Homebrew and zsh completions
+if [[ -x /opt/homebrew/bin/brew ]]; then
+  # macOS on Apple Silicon
+  BREW_LOCATION="/opt/homebrew/bin/brew"
+elif [[ -x /usr/local/bin/brew ]]; then
+  # Legacy macOS on Intel
+  BREW_LOCATION="/usr/local/bin/brew"
+elif [[ -x /home/linuxbrew/.linuxbrew/bin/brew ]]; then
+  # Linuxbrew global
+  BREW_LOCATION="/home/linuxbrew/.linuxbrew/bin/brew"
+elif [[ -x "$HOME/.linuxbrew/bin/brew" ]]; then
+  # Linuxbrew local
+  BREW_LOCATION="$HOME/.linuxbrew/bin/brew"
+else
+  # No homebrew
+  BREW_LOCATION=
 fi
+
+if [ -n "$BREW_LOCATION" ]; then
+  eval "$("$BREW_LOCATION" shellenv)"
+  unset BREW_LOCATION
+
+  # Set HOMEBREW_PREFIX if necessary
+  if [[ -z "$HOMEBREW_PREFIX" ]]; then
+    export HOMEBREW_PREFIX="$(brew --prefix)"
+  fi
+
+  # Add zsh completions to $fpath
+  for DIR in "$HOMEBREW_PREFIX/share/zsh/site-functions" "$HOMEBREW_PREFIX/share/zsh-completions"; do
+    if [[ -d "$DIR" ]] && [[ !${fpath[(Ie)$DIR]} ]]; then
+      fpath+=($DIR)
+    fi
+  done
+  unset DIR
+fi
+
+# Add local bin paths
+for DIR in "$HOME/.local/bin" "$HOME/bin"; do
+  if [ -d "$DIR" ] && [[ !${path[(Ie)$DIR]} ]]; then
+    path=("$DIR" $path)
+  fi
+done
+unset DIR

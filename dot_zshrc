@@ -14,10 +14,6 @@ fi
 
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
-if [ -d "$HOME/.local/bin" ]; then
-  export PATH="$HOME/.local/bin:$PATH"
-fi
-
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
 
@@ -99,15 +95,14 @@ plugins=(
   direnv
   docker
   eza
-  fzf
-  fzf-tab-source
   fzf-tab
+  fzf-tab-source
   forgit
   iterm2
   pip
   zoxide
-  zsh-autosuggestions
   zsh-shift-select
+  zsh-autosuggestions
   fast-syntax-highlighting
 )
 

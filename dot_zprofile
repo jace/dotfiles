@@ -32,6 +32,16 @@ if [ -n "$BREW_LOCATION" ]; then
     fi
   done
   unset DIR
+
+  # Add Homebrew optionals to path
+  for OPT in ruby; do
+    DIR="$HOMEBREW_PREFIX/opt/$OPT/bin"
+    if [[ -d "$DIR" ]] && [[ !${path[(Ie)$DIR]} ]]; then
+      path=("$DIR" $path)
+    fi
+  done
+  unset OPT
+  unset DIR
 fi
 
 # Add local bin paths

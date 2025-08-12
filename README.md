@@ -10,7 +10,7 @@ Getting started:
 
 This config depends on [Nerd Fonts](https://www.nerdfonts.com/) – I like Fira Code and [MesloLGS NF](https://github.com/romkatv/powerlevel10k#fonts) – and these manually installed CLI tools (\* for required):
 
-- [zsh](https://www.zsh.org/) (change shell with `chsh`)
+- [zsh](https://www.zsh.org/) (change your shell with `chsh`)
 - [7zip](https://www.7-zip.org/) - file archiver
 - [bat](https://github.com/sharkdp/bat) - cat with wings
 - [broot](https://github.com/Canop/broot) - cd+ls+find+tree (also see yazi)
@@ -22,7 +22,7 @@ This config depends on [Nerd Fonts](https://www.nerdfonts.com/) – I like Fira 
 - [eza](https://github.com/eza-community/eza)\* - better ls (also see lsd)
 - [fd](https://github.com/sharkdp/fd) - better find
 - [ffmpeg](https://www.ffmpeg.org/) - multimedia multitool
-- [fq](https://github.com/wader/fq) - binary file processor
+- [fq](https://github.com/wader/fq) - binary file processor (better than a hex viewer)
 - [fzf](https://github.com/junegunn/fzf)\* - nicer tab autocompletion
 - [gh](https://github.com/cli/cli) - GitHub CLI (for auth)
 - [git-delta](https://github.com/dandavison/delta) - nicer git deltas

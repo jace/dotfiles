@@ -24,12 +24,12 @@ fi
 # Start analysis. Is this a directory?
 if [ -d "$1" ]; then
   if has_cmd eza; then
-    eza -hlA --git --color=always --icons=always -- "$1" && exit || exit 1
+    eza -1AF --git --color=always --icons=always -- "$1" && exit || exit 1
   elif has_cmd lsd; then
-    lsd --hlA -git --color=always --icon=always -- "$1" && exit || exit 1
+    lsd -1AF -git --color=always --icon=always -- "$1" && exit || exit 1
     exit
   else
-    ls -hlA --color=always -- "$1" && exit || exit 1
+    ls -1AF --color=always -- "$1" && exit || exit 1
     exit
   fi
 fi
@@ -45,34 +45,31 @@ if [ -f "$1" ]; then
   if [ "$mime" = "application/pdf" ]; then
     if has_cmd timg; then
       timg -pq -- "$1" 2>/dev/null || timg -pq -g80x25 -- "$1" && exit || exit 1
-    elif has_cmd pdftotext; then
-      pdftotext -layout -- "$1" && exit || exit 1
     fi
+    exit 1
   elif [ "$mime" = "application/vnd.sqlite3" ]; then
-    if has_cmd yes sqlite3 bat; then
-      echo -e '.schema\n.dump\n.q' | sqlite3 -- "$1" | bat --color=always --pager=never --style=plain -plsql && exit || exit 1
+    if has_cmd sqlite3 bat; then
+      echo -e '.schema\n.dump\n.q' | sqlite3 -- "$1" | bat --color=always -Ppl sql && exit || exit 1
     fi
-  elif [ "$kind" == "json" ]; then
-    if [ "$ext" = ipynb ] && has_cmd jupyter bat; then
-      jupyter nbconvert --to python --stdout -- "$1" | bat --color=always --pager=never --style=plain -plpython && exit || exit 1
-    fi
-    if has_cmd jq; then
-      jq -Cr . -- "$1" && exit || exit 1
-    fi
+    exit 1
+  elif [ "$kind" == "json" ] && [ "$ext" = ipynb ] && has_cmd euporie; then
+      euporie preview --color-depth 24 --color-scheme default -- "$1" && exit || exit 1
   elif [ "$category" = "image" ]; then
     if [ "$kind" != "heic" ] && has_cmd chafa; then
       chafa -f symbols -- "$1" && exit || exit 1
     elif has_cmd timg; then
       timg -pq --loops=1 --frames=1 -- "$1" 2>/dev/null || timg -pq -g80x25 --loops=1 --frames=1 -- "$1" && exit || exit 1
     elif has_cmd exiftool bat; then
-      exiftool -- "$1" | bat --color=always --pager=never --style=plain -plyaml && exit || exit 1
+      exiftool -- "$1" | bat --color=always -Ppl yaml && exit || exit 1
     fi
+    exit 1
   elif [ "$category" = "video" ]; then
     if has_cmd timg; then
       timg -pq --loops=1 --frames=1 -- "$1" 2>/dev/null || timg -pq -g80x25 --loops=1 --frames=1 -- "$1" && exit || exit 1
     elif has_cmd exiftool bat; then
-      exiftool -- "$1" | bat --color=always --pager=never --style=plain -plyaml && exit || exit 1
+      exiftool -- "$1" | bat --color=always -Ppl yaml && exit || exit 1
     fi
+    exit 1
   elif [ "$category" = "text" ]; then
     if [ "$ext" = "md" ]; then
       if has_cmd glow; then
@@ -80,15 +77,12 @@ if [ -f "$1" ]; then
       elif has_cmd mdless; then
         mdless -c -P --images=local -- "$1" && exit || exit 1
       fi
+      exit 1
     fi
-    # Unknown text? Let bat handle it
-    if has_cmd bat; then
-      bat --color=always --pager=never --style=plain -- "$1" && exit || exit 1
-    fi
-    # No processor for text/* (bat not available)
+    # Unknown text
     exit 1
   fi
-  # Not text. Try fq
+  # Not text, image, video or PDF. Try fq
   if has_cmd fq; then
     fq -C -- display "$1" 2>/dev/null && exit || exit 1
   fi

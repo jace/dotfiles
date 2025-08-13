@@ -23,14 +23,18 @@ fi
 
 # Start analysis. Is this a directory?
 if [ -d "$1" ]; then
-  if has_cmd eza; then
-    eza -1AF --git --color=always --icons=always -- "$1" && exit || exit 1
-  elif has_cmd lsd; then
-    lsd -1AF -git --color=always --icon=always -- "$1" && exit || exit 1
-    exit
+  if [[ ${COLUMNS:-80} -lt 80 ]]; then
+    # Narrow screen, use -1 instead of -l
+    ls_flags="-1AF"
   else
-    ls -1AF --color=always -- "$1" && exit || exit 1
-    exit
+    ls_flags="-lAF"
+  fi
+  if has_cmd eza; then
+    eza $ls_flags --git --color=always --icons=always -- "$1" && exit || exit 1
+  elif has_cmd lsd; then
+    lsd $ls_flags -git --color=always --icon=always -- "$1" && exit || exit 1
+  else
+    ls $ls_flags --color=always -- "$1" && exit || exit 1
   fi
 fi
 
@@ -53,7 +57,7 @@ if [ -f "$1" ]; then
     fi
     exit 1
   elif [ "$kind" == "json" ] && [ "$ext" = ipynb ] && has_cmd euporie; then
-      euporie preview --color-depth 24 --color-scheme default -- "$1" && exit || exit 1
+    euporie preview --color-depth 24 --color-scheme default -- "$1" && exit || exit 1
   elif [ "$category" = "image" ]; then
     if [ "$kind" != "heic" ] && has_cmd chafa; then
       chafa -f symbols -- "$1" && exit || exit 1

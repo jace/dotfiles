@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Lesspipe filter.
+# Only attempt to render better than lesspipe's defaults
+
 if [[ -z "$1" ]]; then
   # Don't process stdin
   exit 1
@@ -21,9 +24,31 @@ if ! has_cmd bat && has_cmd batcat; then
   alias bat=batcat
 fi
 
+# Set $COLUMNS and $LINES from FZF preview size or terminal size
+COLUMNS="${FZF_PREVIEW_COLUMNS:-$COLUMNS}"
+LINES="${FZF_PREVIEW_LINES:-$LINES}"
+if [ -z "$COLUMNS" ] || [ -z "$LINES" ]; then
+  if has_cmd stty; then
+    read LINES COLUMNS <<<$(stty size)
+  elif has_cmd tput; then
+    LINES=$(tput lines)
+    COLUMNS=$(tput cols)
+  else
+    LINES=25
+    COLUMNS=80
+  fi
+fi
+# Discover terminal's colour depth
+# https://github.com/termstandard/colors
+if [[ $COLORTERM =~ ^(truecolor|24bit)$ ]] || [[ $TERM =~ ^(iterm|linux-truecolor|screen-truecolor|tmux-truecolor|xterm-truecolor) ]]; then
+  color_depth=24
+else
+  color_depth=8
+fi
+
 # Start analysis. Is this a directory?
 if [ -d "$1" ]; then
-  if [[ ${COLUMNS:-80} -lt 80 ]]; then
+  if [[ "$COLUMNS" -lt 80 ]]; then
     # Narrow screen, use -1 instead of -l
     ls_flags="-1AF"
   else
@@ -48,7 +73,7 @@ if [ -f "$1" ]; then
 
   if [ "$mime" = "application/pdf" ]; then
     if has_cmd timg; then
-      timg -pq -g${COLUMNS:-80}x${LINES:-25} -- "$1" && exit || exit 1
+      timg -pq "-g${COLUMNS}x${LINES}" -- "$1" && exit || exit 1
     fi
     exit 1
   elif [ "$mime" = "application/vnd.sqlite3" ]; then
@@ -56,20 +81,20 @@ if [ -f "$1" ]; then
       echo -e '.schema\n.dump\n.q' | sqlite3 -- "$1" | bat --color=always -Ppl sql && exit || exit 1
     fi
     exit 1
-  elif [ "$kind" == "json" ] && [ "$ext" = ipynb ] && has_cmd euporie; then
-    euporie preview --color-depth 24 --color-scheme default -- "$1" && exit || exit 1
+  elif [ "$kind" == "json" ] && [ "$ext" = "ipynb" ] && has_cmd euporie; then
+    euporie preview --color-depth "$color_depth" --color-scheme default -- "$1" && exit || exit 1
   elif [ "$category" = "image" ]; then
     if [ "$kind" != "heic" ] && has_cmd chafa; then
-      chafa -f symbols -- "$1" && exit || exit 1
+      chafa -f symbols "--view-size=${COLUMNS}x${LINES}" -- "$1" && exit || exit 1
     elif has_cmd timg; then
-      timg -pq -g${COLUMNS:-80}x${LINES:-25} --loops=1 --frames=1 -- "$1" && exit || exit 1
+      timg -pq "-g${COLUMNS}x${LINES}" --loops=1 --frames=1 -- "$1" && exit || exit 1
     elif has_cmd exiftool bat; then
       exiftool -- "$1" | bat --color=always -Ppl yaml && exit || exit 1
     fi
     exit 1
   elif [ "$category" = "video" ]; then
     if has_cmd timg; then
-      timg -pq -g${COLUMNS:-80}x${LINES:-25} --loops=1 --frames=1 -- "$1" && exit || exit 1
+      timg -pq "-g${COLUMNS}x${LINES}" --loops=1 --frames=1 -- "$1" && exit || exit 1
     elif has_cmd exiftool bat; then
       exiftool -- "$1" | bat --color=always -Ppl yaml && exit || exit 1
     fi
@@ -87,9 +112,10 @@ if [ -f "$1" ]; then
     exit 1
   fi
   # Not text, image, video or PDF. Try fq
-  if has_cmd fq; then
-    fq -C -- display "$1" 2>/dev/null && exit || exit 1
-  fi
+  # TODO: Restrict fq to specific mime types
+  #if has_cmd fq; then
+  #  fq -C -- display "$1" 2>/dev/null && exit || exit 1
+  #fi
   # Nothing available for this file
   exit 1
 fi

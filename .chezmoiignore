@@ -1,12 +1,19 @@
 README.md
 .oh-my-zsh/cache
+
 {{- if eq .chezmoi.os "darwin" }}
+# Ignore on macOS
 .local/share/fonts
 {{- end }}
+
 {{ if ne .chezmoi.os "darwin" }}
-Library/Preferences
+# Ignore if not macOS
+.config/iterm2
+Library
 {{ end }}
+
 {{ if ne .chezmoi.os "android" }}
+# Ignore if not Termux on Android
 .termux
 .shortcuts
 .local/bin/desktop-session

@@ -1400,11 +1400,11 @@ The script should do this: \(ai.prompt)</string>
 			<key>Name</key>
 			<string>Default</string>
 			<key>Non Ascii Font</key>
-			<string>MesloLGS-NF-Regular 12</string>
+			<string>MesloLGSNF-Regular 13</string>
 			<key>Non-ASCII Anti Aliased</key>
 			<true/>
 			<key>Normal Font</key>
-			<string>MesloLGS-NF-Regular 13</string>
+			<string>MesloLGSNF-Regular 13</string>
 			<key>Only The Default BG Color Uses Transparency</key>
 			<false/>
 			<key>Open Password Manager Automatically</key>
@@ -2691,11 +2691,11 @@ The script should do this: \(ai.prompt)</string>
 			<key>Name</key>
 			<string>Remote</string>
 			<key>Non Ascii Font</key>
-			<string>MesloLGS-NF-Regular 12</string>
+			<string>MesloLGSNF-Regular 13</string>
 			<key>Non-ASCII Anti Aliased</key>
 			<true/>
 			<key>Normal Font</key>
-			<string>MesloLGS-NF-Regular 13</string>
+			<string>MesloLGSNF-Regular 13</string>
 			<key>Only The Default BG Color Uses Transparency</key>
 			<false/>
 			<key>Open Password Manager Automatically</key>

@@ -2,15 +2,18 @@
 
 Getting started:
 
-1. [Install Chezmoi](https://www.chezmoi.io/install) and [GitHub CLI](https://github.com/cli/cli#installation)
-2. Authenticate gh: `gh auth login`, then copy the token from `gh auth token`
-3. Apply Chezmoi config with `chezmoi init https://github.com/$GITHUB_USERNAME/dotfiles.git`
+1. [Install Chezmoi](https://www.chezmoi.io/install) and [GitHub CLI](https://github.com/cli/cli#installation) (see below)
+2. Authenticate GitHub: `gh auth login` and if using HTTPS, `gh auth setup-git`
+3. Apply Chezmoi config:
+   - HTTPS: `chezmoi init https://github.com/jace/dotfiles.git`
+   - SSH: `chezmoi init git@github.com:jace/dotfiles.git
 
 ### Dependencies
 
-This config depends on [Nerd Fonts](https://www.nerdfonts.com/) – I like Fira Code and [MesloLGS NF](https://github.com/romkatv/powerlevel10k#fonts) – and these manually installed CLI tools (\* for required):
+This config depends on ZSH, [Nerd Fonts](https://www.nerdfonts.com/) – I like Fira Code and MesloLGS NF – and these manually installed CLI tools (\* for required):
 
-- [zsh](https://www.zsh.org/) (change your shell with `chsh`)
+- [zsh](https://www.zsh.org/)\* (change your shell with `chsh -s $(which zsh)`)
+- [chezmoi](https://www.chezmoi.io)\* - dotfile manager
 - [7zip](https://www.7-zip.org/) - file archiver
 - [bat](https://github.com/sharkdp/bat) - cat with wings
 - [broot](https://github.com/Canop/broot) - cd+ls+find+tree (also see yazi)
@@ -51,15 +54,16 @@ Most of these can be installed with `brew|apt|pkg install name…` but some dist
 ### macOS
 
 ```shell
-brew install 7zip bat broot chafa difftastic direnv dust et eza fd ffmpeg wader/tap/fq fzf gh git-delta glow grc gron hexyl jc jless jq lsd pandoc procs resvg ripgrep timg uv yazi zoxide
+brew install bat broot chafa chezmoi difftastic direnv dust MisterTea/et/et eza fd ffmpeg font-meslo-lg-nerd-font font-fira-code-nerd-font wader/tap/fq fzf gh git-delta glow grc gron hexyl jc jless jq lsd pandoc procs resvg ripgrep sevenzip timg uv yazi zoxide
 ```
 
 Sync iTerm2 config:
 
 1. Go to Settings… -> General -> Settings
 2. Enable "External settings"
-3. Set folder to `~/.config/iterm2`
+3. Set folder to `~/.config/iterm2` and decline to write the current config
 4. Set "Save changes" to "Automatically"
+5. Quit iTerm2 and start it again to load the synced config
 
 ### Ubuntu
 
@@ -74,10 +78,10 @@ echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubc
 sudo add-apt-repository ppa:jgmath2000/et
 # add-apt-repository will invoke `apt update`
 # Install deb-packaged tools
-sudo apt install 7zip bat broot chafa direnv et eza fd-musl ffmpeg fq fzf git-delta glow gron hexyl jc jq lsd pandoc procs resvg ripgrep timg zoxide
+sudo apt install 7zip bat broot chafa direnv et eza fd-musl ffmpeg fq fzf git-delta glow gron hexyl jc jq lsd pandoc procs resvg ripgrep timg zoxide zsh
 # Install snap-packaged tools
 sudo snap install difftastic dust gh
-sudo snap install yazi --classic
+sudo snap install chezmoi yazi --classic
 ```
 
 Missing: grc, jless, mcfly, lazygit (available via Linux Homebrew)
@@ -89,7 +93,7 @@ Refer to Ubuntu instructions for now.
 ### Termux
 
 ```shell
-pkg install 7zip bat broot chafa difftastic direnv dust et eza fd ffmpeg fq fzf gh git-delta glow gron hexyl jc jless jq lsd pandoc procs resvg ripgrep timg uv yazi zoxide
+pkg install 7zip bat broot chafa chezmoi difftastic direnv dust et eza fd ffmpeg fq fzf gh git-delta glow gron hexyl jc jless jq lsd pandoc procs resvg ripgrep timg uv yazi zoxide zsh
 ```
 
 Missing: grc, numbat (build is currently failing on a dependency)

@@ -1,6 +1,7 @@
-# Setup Homebrew and zsh completions
+# Setup Homebrew, ZSH completions and $PATH
+
 if [[ "$OSTYPE" == *android* ]]; then
-  # Do not probe root-level folders on Android
+  # Do not probe root-level folders on Android; assume no Homebrew
   BREW_LOCATION=
 # Disregard any `brew` already in the path and probe for
 # specific folders.
@@ -29,7 +30,7 @@ if [ -n "$BREW_LOCATION" ]; then
     export HOMEBREW_PREFIX="$(brew --prefix)"
   fi
 
-  # Add zsh completions to $fpath
+  # Add ZSH completions to $fpath
   for DIR in "$HOMEBREW_PREFIX/share/zsh/site-functions" "$HOMEBREW_PREFIX/share/zsh-completions"; do
     if [[ -d "$DIR" ]] && [[ !${fpath[(Ie)$DIR]} ]]; then
       fpath+=($DIR)
@@ -37,7 +38,7 @@ if [ -n "$BREW_LOCATION" ]; then
   done
 
   # Hint: The (N,F) suffix is a ZSH glob qualifier
-  #   N: Turns on NULL_GLOB to avoid erroring out if there are no matches
+  #   N: Turns on NULL_GLOB to avoid erroring if there are no matches (skips the for loop)
   #   F: Only matches "full" (non-empty) directories
 
   # Add Homebrew gnubin folders to path
@@ -52,6 +53,7 @@ if [ -n "$BREW_LOCATION" ]; then
       manpath=("$DIR" $manpath)
     fi
   done
+
   # Add Homebrew keg-only formulae to path (esp Ruby, as macOS Ruby is obsolete)
   for OPT in sqlite ruby; do
     DIR="$HOMEBREW_PREFIX/opt/$OPT/bin"

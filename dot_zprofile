@@ -1,10 +1,17 @@
-# Setup Homebrew, ZSH completions and $PATH
+# Setup Homebrew and $PATH
 
 if [[ "$OSTYPE" == *android* ]]; then
-  # Do not probe root-level folders on Android; assume no Homebrew
+  # Do not probe root-level folders on Android.
+  # Assume no Homebrew
   BREW_LOCATION=
-# Disregard any `brew` already in the path and probe for
-# specific folders.
+
+# Disregard any `brew` already in the path and probe
+# for specific folders. This avoids an edge case with
+# macOS on Apple Silicon when Homebrew for Intel is
+# also installed, for legacy formulae like python2.7.
+# /usr/local/bin is in the default macOS $PATH and
+# the legacy Homebrew installation will be there
+
 elif [[ -x /opt/homebrew/bin/brew ]]; then
   # macOS on Apple Silicon
   BREW_LOCATION="/opt/homebrew/bin/brew"
@@ -22,6 +29,7 @@ else
   BREW_LOCATION=
 fi
 
+# If we have Homebrew, setup its environment
 if [ -n "$BREW_LOCATION" ]; then
   eval "$("$BREW_LOCATION" shellenv)"
 
@@ -38,24 +46,29 @@ if [ -n "$BREW_LOCATION" ]; then
   done
 
   # Hint: The (N,F) suffix is a ZSH glob qualifier
-  #   N: Turns on NULL_GLOB to avoid erroring if there are no matches (skips the for loop)
+  #   N: Turns on NULL_GLOB to avoid erroring if there are no matches (skips the for loop instead)
   #   F: Only matches "full" (non-empty) directories
 
-  # Add Homebrew gnubin folders to path
+  # Add Homebrew gnubin folders to $path
   for DIR in "$HOMEBREW_PREFIX"/opt/*/libexec/gnubin(N,F); do
     if [[ !${path[(Ie)$DIR]} ]]; then
       path=("$DIR" $path)
     fi
   done
-  # Add Homebrew gnuman folders to manpath
+  # Add Homebrew gnuman folders to $manpath
   for DIR in "$HOMEBREW_PREFIX"/opt/*/libexec/gnuman(N,F); do
     if [[ !${manpath[(Ie)$DIR]} ]]; then
       manpath=("$DIR" $manpath)
     fi
   done
 
-  # Add Homebrew keg-only formulae to path (esp Ruby, as macOS Ruby is obsolete)
-  for OPT in sqlite ruby; do
+  # Add some Homebrew keg-only formulae to $path.
+  # Homebrew's Ruby is keg-only for unclear reasons,
+  # but various other tools expect a modern `ruby` in the path,
+  # so we're going to put it there until we find a compelling reason not to.
+  # Same for a few others
+
+  for OPT in curl ruby; do
     DIR="$HOMEBREW_PREFIX/opt/$OPT/bin"
     if [[ -d "$DIR" ]] && [[ !${path[(Ie)$DIR]} ]]; then
       path=("$DIR" $path)
@@ -70,7 +83,7 @@ for DIR in "$HOME/.cargo/bin" "$HOME/.local/bin" "$HOME/bin"; do
   fi
 done
 
-# Remove temp variables
+# Unset temp variables
 unset BREW_LOCATION
 unset OPT
 unset DIR

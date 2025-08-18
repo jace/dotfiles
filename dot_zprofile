@@ -45,7 +45,7 @@ if [ -n "$BREW_LOCATION" ]; then
 fi
 
 # Add local bin paths
-for DIR in "$HOME/.local/bin" "$HOME/bin"; do
+for DIR in "$HOME/.cargo/bin" "$HOME/.local/bin" "$HOME/bin"; do
   if [ -d "$DIR" ] && [[ !${path[(Ie)$DIR]} ]]; then
     path=("$DIR" $path)
   fi

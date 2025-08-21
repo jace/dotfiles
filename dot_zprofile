@@ -1,43 +1,14 @@
-# Setup Homebrew and $PATH
+# Flag for ~/.zshrc to avoid double sourcing
+export DOT_ZPROFILE_SOURCED=1
 
-if [[ "$OSTYPE" == *android* ]]; then
-  # Do not probe root-level folders on Android.
-  # Assume no Homebrew
-  BREW_LOCATION=
-
-# Disregard any `brew` already in the path and probe
-# for specific folders. This avoids an edge case with
-# macOS on Apple Silicon when Homebrew for Intel is
-# also installed, for legacy formulae like python2.7.
-# /usr/local/bin is in the default macOS $PATH and
-# the legacy Homebrew installation will be there
-
-elif [[ -x /opt/homebrew/bin/brew ]]; then
-  # macOS on Apple Silicon
-  BREW_LOCATION="/opt/homebrew/bin/brew"
-elif [[ -x /usr/local/bin/brew ]]; then
-  # Legacy macOS on Intel
-  BREW_LOCATION="/usr/local/bin/brew"
-elif [[ -x /home/linuxbrew/.linuxbrew/bin/brew ]]; then
-  # Homebrew Linux global (formerly Linuxbrew)
-  BREW_LOCATION="/home/linuxbrew/.linuxbrew/bin/brew"
-elif [[ -x "$HOME/.linuxbrew/bin/brew" ]]; then
-  # Homebrew Linux local
-  BREW_LOCATION="$HOME/.linuxbrew/bin/brew"
-else
-  # No Homebrew
-  BREW_LOCATION=
+# Linux desktops source ~/.profile on login but CLI and macOS don't.
+# Source if not already done
+if [[ "${DOT_PROFILE_SOURCED:-}" != 1 ]]; then
+  emulate sh -c ". $HOME/.profile" 
 fi
 
-# If we have Homebrew, setup its environment
-if [ -n "$BREW_LOCATION" ]; then
-  eval "$("$BREW_LOCATION" shellenv)"
-
-  # Set HOMEBREW_PREFIX if necessary
-  if [[ -z "$HOMEBREW_PREFIX" ]]; then
-    export HOMEBREW_PREFIX="$(brew --prefix)"
-  fi
-
+# If we have Homebrew, setup its ZSH environment
+if [[ -n "$HOMEBREW_PREFIX" ]]; then
   # Add ZSH completions to $fpath
   for DIR in "$HOMEBREW_PREFIX/share/zsh/site-functions" "$HOMEBREW_PREFIX/share/zsh-completions"; do
     if [[ -d "$DIR" ]] && [[ !${fpath[(Ie)$DIR]} ]]; then
@@ -84,6 +55,5 @@ for DIR in "$HOME/.cargo/bin" "$HOME/.local/bin" "$HOME/bin"; do
 done
 
 # Unset temp variables
-unset BREW_LOCATION
 unset OPT
 unset DIR

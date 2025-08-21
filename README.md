@@ -90,9 +90,6 @@ Missing: grc, jless, mcfly, lazygit (available via Linux Homebrew)
 ### Raspberry Pi OS
 
 ```shell
-# Add the apt.cli.rs repository for Rust-based tools
-curl -fsSL https://apt.cli.rs/pubkey.asc | sudo tee -a /usr/share/keyrings/rust-tools.asc
-curl -fsSL https://apt.cli.rs/rust-tools.list | sudo tee /etc/apt/sources.list.d/rust-tools.list
 # Add the GitHub CLI repository
 curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo tee /etc/apt/keyrings/githubcli-archive-keyring.gpg > /dev/null
 echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list
@@ -103,16 +100,17 @@ curl -fsSL https://github.com/MisterTea/debian-et/raw/master/et.gpg | sudo tee /
 curl -fsSL https://raw.githubusercontent.com/eza-community/eza/main/deb.asc | sudo gpg --dearmor -o /etc/apt/keyrings/gierens.gpg
 echo "deb [signed-by=/etc/apt/keyrings/gierens.gpg] http://deb.gierens.de stable main" | sudo tee /etc/apt/sources.list.d/gierens.list
 # Install deb-packaged tools
-sudo apt install 7zip bat chafa direnv et eza fd-musl ffmpeg fq fzf gron hexyl jc jq lsd pandoc ripgrep timg zoxide zsh
+sudo apt update
+sudo apt install 7zip bat chafa direnv et eza ffmpeg fq fzf gh gron hexyl jc jq lsd pandoc ripgrep snapd timg zoxide zsh
 # Install snap-packaged tools
-sudo snap install difftastic dust gh glow procs
+sudo snap install difftastic dust glow
 sudo snap install chezmoi --classic
 sudo snap install yazi --classic
 ```
 
 If gh is unavailable from the APT repos, get it from Pi-Apps.
 
-Missing: broot, git-delta, resvg, grc, jless, mcfly, lazygit
+Missing: broot, fd, git-delta, procs, resvg, grc, jless, mcfly, lazygit
 
 ### Termux
 

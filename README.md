@@ -22,7 +22,7 @@ This config depends on ZSH, [Nerd Fonts](https://www.nerdfonts.com/) – I like 
 - [direnv](https://direnv.net/)\* - manage environment per folder
 - [dust](https://github.com/bootandy/dust) - better disk usage visualisation
 - [et](https://eternalterminal.dev/) - ssh without disconnects from flaky internet
-- [eza](https://github.com/eza-community/eza)\* - better ls (also see lsd)
+- [eza](https://github.com/eza-community/eza)\* - better ls (also see lsd; eza is slightly faster and more featured)
 - [fd](https://github.com/sharkdp/fd) - better find
 - [ffmpeg](https://www.ffmpeg.org/) - multimedia multitool
 - [fq](https://github.com/wader/fq) - binary file processor (better than a hex viewer)
@@ -37,7 +37,7 @@ This config depends on ZSH, [Nerd Fonts](https://www.nerdfonts.com/) – I like 
 - [jless](https://jless.io/) - JSON viewer with folding
 - [jq](https://jqlang.org/) - JSON processor
 - [lazygit](https://github.com/jesseduffield/lazygit) - Git TUI
-- [lsd](https://github.com/lsd-rs/lsd) - better ls (also see eza)
+- [lsd](https://github.com/lsd-rs/lsd) - better ls (also see eza; lsd's options are more compatible with GNU ls)
 - [mcfly](https://github.com/cantino/mcfly) - better ^R command history
 - [numbat](https://github.com/sharkdp/numbat) - better bc (expression calculator)
 - [pandoc](https://pandoc.org/) - convert between markup formats for terminal viewers
@@ -65,10 +65,19 @@ Sync iTerm2 config:
 4. Set "Save changes" to "Automatically"
 5. Quit iTerm2 and start it again to load the synced config
 
+### Termux
+
+```shell
+pkg install 7zip bat broot chafa chezmoi difftastic direnv dust et eza fd ffmpeg fq fzf gh git-delta glow gron hexyl jc jless jq lsd pandoc procs resvg ripgrep timg uv yazi zoxide zsh
+```
+
+Missing: grc, numbat (build from source is currently failing on a dependency)
+
+
 ### Ubuntu
 
 ```shell
-# Add the apt.cli.rs repository for Rust-based tools
+# Add the apt.cli.rs repository for Rust-based tools (TODO: deprecated, remove this)
 curl -fsSL https://apt.cli.rs/pubkey.asc | sudo tee -a /usr/share/keyrings/rust-tools.asc
 curl -fsSL https://apt.cli.rs/rust-tools.list | sudo tee /etc/apt/sources.list.d/rust-tools.list
 # Add the GitHub CLI repository
@@ -78,7 +87,7 @@ echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubc
 sudo add-apt-repository ppa:jgmath2000/et
 # add-apt-repository will invoke `apt update`
 # Install deb-packaged tools
-sudo apt install 7zip bat broot chafa direnv et eza fd-musl ffmpeg fq fzf git-delta glow gron hexyl jc jq lsd pandoc procs resvg ripgrep timg zoxide zsh
+sudo apt install 7zip bat broot chafa direnv et eza fd-musl ffmpeg fq fzf git-delta glow gron hexyl jc jq lsd numbat pandoc procs resvg ripgrep timg zoxide zsh
 # Install snap-packaged tools
 sudo snap install difftastic dust gh
 sudo snap install chezmoi --classic
@@ -90,6 +99,7 @@ Missing: grc, jless, mcfly, lazygit (available via Linux Homebrew)
 ### Raspberry Pi OS
 
 ```shell
+sudo mkdir -p /etc/apt/keyrings
 # Add the GitHub CLI repository
 curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo tee /etc/apt/keyrings/githubcli-archive-keyring.gpg > /dev/null
 echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list
@@ -99,23 +109,76 @@ curl -fsSL https://github.com/MisterTea/debian-et/raw/master/et.gpg | sudo tee /
 # Add the Eza repository
 curl -fsSL https://raw.githubusercontent.com/eza-community/eza/main/deb.asc | sudo gpg --dearmor -o /etc/apt/keyrings/gierens.gpg
 echo "deb [signed-by=/etc/apt/keyrings/gierens.gpg] http://deb.gierens.de stable main" | sudo tee /etc/apt/sources.list.d/gierens.list
+# Add the Glow repository
+curl -fsSL https://repo.charm.sh/apt/gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/charm.gpg
+echo "deb [signed-by=/etc/apt/keyrings/charm.gpg] https://repo.charm.sh/apt/ * *" | sudo tee /etc/apt/sources.list.d/charm.list
 # Install deb-packaged tools
 sudo apt update
-sudo apt install 7zip bat chafa direnv et eza ffmpeg fq fzf gh gron hexyl jc jq lsd pandoc ripgrep snapd timg zoxide zsh
+sudo apt install 7zip bat chafa direnv et eza ffmpeg fd-find fq fzf gh glow gron hexyl jc jq lsd pandoc ripgrep timg zoxide zsh
+```
+
+For the remaining tools or for the latest versions, use another package manager. Snap and Homebrew both have broken binaries on arm64. Homebrew is the better choice:
+
+1. A larger selection of packages
+2. More up-to-date
+3. No overhead of containers
+4. Compile from source if the binary is broken or missing (but this is not always viable on resource-constrained devices)
+
+#### Snap
+
+```
+# Install snap
+sudo apt install snapd
 # Install snap-packaged tools
-sudo snap install difftastic dust glow
 sudo snap install chezmoi --classic
 sudo snap install yazi --classic
 ```
 
-If gh is unavailable from the APT repos, get it from Pi-Apps.
+Broken: dust, difftastic, lazygit (can't use gh for auth), procs, uv
+Missing: broot, fd, git-delta, numbat, procs, resvg, grc, jless, mcfly
 
-Missing: broot, fd, git-delta, procs, resvg, grc, jless, mcfly, lazygit
+#### Homebrew Linux
 
-### Termux
-
-```shell
-pkg install 7zip bat broot chafa chezmoi difftastic direnv dust et eza fd ffmpeg fq fzf gh git-delta glow gron hexyl jc jless jq lsd pandoc procs resvg ripgrep timg uv yazi zoxide zsh
+```
+# Install Homebrew
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+# Install brew-packaged tools
+brew install broot dust difftastic chezmoi git-delta lazygit numbat procs resvg grc jless mcfly yazi
 ```
 
-Missing: grc, numbat (build is currently failing on a dependency)
+Broken: difftastic, fd, uv
+Missing: lazygit (no binary bottle)
+
+Homebrew offers the option to build from source but this requires the entire toolchain for Go and Rust. If you have good storage (SATA or NVMe) and a spare hour:
+
+```
+brew install --build-from-source fd lazygit difftastic
+```
+
+Broken: uv (on a Raspberry Pi 5 with 8 GB, this maxed out RAM and got the NVMe drive deadlocked with swapping)
+
+To avoid building from source, try a binary installer.
+
+### Binary installer: gah
+
+Gah! installs binaries from GitHub Releases into `~/.local/bin`. It does not have an uninstaller or updater.
+
+```shell
+# Install gah
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/marverix/gah/refs/heads/master/tools/install.sh)"
+# Install uv (both GNU and MUSL releases work)
+gah install astral-sh/uv --unattended
+gah install lazygit --unattended
+```
+
+Unfortunately, some official binary releases are broken here as well (eg: [difftastic on arm64](https://github.com/Wilfred/difftastic/issues/872)).
+
+### Ecosystem installers
+
+A final option is to use an ecosystem-specific installer. Since they are also project dependency managers, they need a disambiguating subcommand or flag:
+
+* Go: `GOBIN=~/.local/bin go install`
+* Cargo: `cargo binstall` ([get it here](https://github.com/cargo-bins/cargo-binstall); installs to `~/.cargo/bin`)
+* Python: `uv tool install` or `pipx install`
+* Rust: `gem install`
+* NodeJS: `npm install -g` (system global)

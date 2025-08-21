@@ -87,9 +87,9 @@ echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubc
 sudo add-apt-repository ppa:jgmath2000/et
 # add-apt-repository will invoke `apt update`
 # Install deb-packaged tools
-sudo apt install 7zip bat broot chafa direnv et eza fd-musl ffmpeg fq fzf git-delta glow gron hexyl jc jq lsd numbat pandoc procs resvg ripgrep timg zoxide zsh
+sudo apt install 7zip bat broot chafa direnv et eza fd-musl ffmpeg fq fzf gh git-delta glow gron hexyl jc jq lsd numbat pandoc procs resvg ripgrep timg zoxide zsh
 # Install snap-packaged tools
-sudo snap install difftastic dust gh
+sudo snap install difftastic dust
 sudo snap install chezmoi --classic
 sudo snap install yazi --classic
 ```

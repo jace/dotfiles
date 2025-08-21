@@ -117,11 +117,11 @@ sudo apt update
 sudo apt install 7zip bat chafa direnv et eza ffmpeg fd-find fq fzf gh glow gron hexyl jc jq lsd pandoc ripgrep timg zoxide zsh
 ```
 
-For the remaining tools or for the latest versions, use another package manager. Snap and Homebrew both have broken binaries on arm64. Homebrew is the better choice:
+For the remaining tools or for the latest versions, use another package manager. Snap and Homebrew both have broken binaries on arm64, but Homebrew is the better choice:
 
 1. A larger selection of packages
 2. More up-to-date
-3. No overhead of containers
+3. No overhead of containers and subtly broken functionality
 4. Compile from source if the binary is broken or missing (but this is not always viable on resource-constrained devices)
 
 #### Snap
@@ -143,19 +143,17 @@ Missing: broot, fd, git-delta, numbat, procs, resvg, grc, jless, mcfly
 # Install Homebrew
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 # Install brew-packaged tools
-brew install broot dust difftastic chezmoi git-delta lazygit numbat procs resvg grc jless mcfly yazi
+brew install broot dust difftastic chezmoi git-delta lazygit numbat procs resvg grc jless mcfly uv yazi
 ```
 
-Broken: difftastic, fd, uv
+Broken: difftastic, fd
 Missing: lazygit (no binary bottle)
 
-Homebrew offers the option to build from source but this requires the entire toolchain for Go and Rust. If you have good storage (SATA or NVMe) and a spare hour:
+Homebrew offers the option to build from source but this requires the entire toolchain for Go and Rust and may overload the device:
 
 ```
 brew install --build-from-source fd lazygit difftastic
 ```
-
-Broken: uv (on a Raspberry Pi 5 with 8 GB, this maxed out RAM and got the NVMe drive deadlocked with swapping)
 
 To avoid building from source, try a binary installer.
 
@@ -167,7 +165,6 @@ Gah! installs binaries from GitHub Releases into `~/.local/bin`. It does not hav
 # Install gah
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/marverix/gah/refs/heads/master/tools/install.sh)"
 # Install uv (both GNU and MUSL releases work)
-gah install astral-sh/uv --unattended
 gah install lazygit --unattended
 ```
 

@@ -39,7 +39,7 @@ if [ -n "$BREW_LOCATION" ]; then
   eval "$("$BREW_LOCATION" shellenv)"
 
   # Set HOMEBREW_PREFIX if necessary
-  if [[ -z "$HOMEBREW_PREFIX" ]]; then
+  if [ -z "$HOMEBREW_PREFIX" ]; then
     export HOMEBREW_PREFIX="$(brew --prefix)"
   fi
 fi

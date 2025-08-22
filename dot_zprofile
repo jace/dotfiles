@@ -4,7 +4,7 @@ export DOT_ZPROFILE_SOURCED=1
 # Linux desktops source ~/.profile on login but CLI and macOS don't.
 # Source if not already done
 if [[ "${DOT_PROFILE_SOURCED:-}" != 1 ]]; then
-  emulate sh -c ". $HOME/.profile" 
+  [[ -r "$HOME/.profile" ]] && emulate sh -c '. "$HOME/.profile"'
 fi
 
 # If we have Homebrew, setup its ZSH environment

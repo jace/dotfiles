@@ -4,7 +4,7 @@ fi
 if [[ "${DOT_ZPROFILE_SOURCED:-}" != 1 ]]; then
   # ~/.zprofile is not sourced in Linux desktop login,
   # and Linux terminal emulators don't use login shells
-  source $HOME/.zprofile
+  [[ -r "$HOME/.zprofile" ]] && source "$HOME/.zprofile"
 fi
 
 # Disable iTerm2 prompt marker

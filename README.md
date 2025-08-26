@@ -7,10 +7,11 @@ Getting started:
 3. Apply Chezmoi config:
    - HTTPS: `chezmoi init https://github.com/jace/dotfiles.git`
    - SSH: `chezmoi init git@github.com:jace/dotfiles.git`
+   - Next: `chezmoi apply`
 
 ### Dependencies
 
-This config depends on ZSH, [Nerd Fonts](https://www.nerdfonts.com/) – I like Fira Code and MesloLGS NF – and these manually installed CLI tools (\* for required):
+This config depends on ZSH, [Nerd Fonts](https://www.nerdfonts.com/) – I like Fira Code and MesloLGS – and these optional, manually installed CLI tools (\* for required):
 
 - [zsh](https://www.zsh.org/)\* (change your shell with `chsh -s $(which zsh)`)
 - [chezmoi](https://www.chezmoi.io)\* - dotfile manager
@@ -71,7 +72,7 @@ Sync iTerm2 config:
 pkg install 7zip bat broot chafa chezmoi difftastic direnv dust et eza fd ffmpeg fq fzf gh git-delta glow gron hexyl jc jless jq lsd pandoc procs resvg ripgrep timg uv yazi zoxide zsh
 ```
 
-Missing: grc, numbat (build from source is currently failing on a dependency)
+Missing: fq, grc, jc, numbat, resvg
 
 
 ### Ubuntu

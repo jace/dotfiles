@@ -74,7 +74,6 @@ pkg install 7zip bat broot chafa chezmoi difftastic direnv dust et eza fd ffmpeg
 
 Missing: fq, grc, jc, numbat, resvg
 
-
 ### Ubuntu
 
 ```shell
@@ -97,7 +96,9 @@ sudo snap install yazi --classic
 
 Missing: grc, jless, mcfly, lazygit (available via Linux Homebrew)
 
-### Raspberry Pi OS
+### Raspberry Pi OS and Armbian
+
+These instructions work for both distributions, but while some packages are broken on a Raspberry Pi, they seem to work fine on a Rockchip device. Tested with a Raspberry Pi 5 running RPiOS Debian 12 Bookworm and a Radxa Rock 5B+ running Armbian 25.5.
 
 ```shell
 sudo mkdir -p /etc/apt/keyrings
@@ -118,7 +119,7 @@ sudo apt update
 sudo apt install 7zip bat chafa direnv et eza ffmpeg fd-find fq fzf gh glow gron hexyl jc jq lsd pandoc ripgrep timg zoxide zsh
 ```
 
-For the remaining tools or for the latest versions, use another package manager. Snap and Homebrew both have broken binaries on arm64, but Homebrew is the better choice:
+For the remaining tools or for the latest versions, use another package manager. Snap and Homebrew both have broken binaries on a Raspberry Pi, but Homebrew is the better choice:
 
 1. A larger selection of packages
 2. More up-to-date
@@ -135,7 +136,7 @@ sudo snap install chezmoi --classic
 sudo snap install yazi --classic
 ```
 
-Broken: dust, difftastic, lazygit (can't use gh for auth), procs, uv
+Broken: dust, difftastic, lazygit (can't use gh for auth), procs, uv  
 Missing: broot, fd, git-delta, numbat, procs, resvg, grc, jless, mcfly
 
 #### Homebrew Linux
@@ -143,11 +144,12 @@ Missing: broot, fd, git-delta, numbat, procs, resvg, grc, jless, mcfly
 ```
 # Install Homebrew
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 # Install brew-packaged tools
-brew install broot dust difftastic chezmoi git-delta lazygit numbat procs resvg grc jless mcfly uv yazi
+brew install broot dust chezmoi git-delta numbat procs resvg grc jless mcfly uv yazi
 ```
 
-Broken: difftastic, fd
+Broken: difftastic, fd (on Raspberry Pi)  
 Missing: lazygit (no binary bottle)
 
 Homebrew offers the option to build from source but this requires the entire toolchain for Go and Rust and may overload the device:
@@ -169,14 +171,14 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/marverix/gah/refs/heads/
 gah install lazygit --unattended
 ```
 
-Unfortunately, some official binary releases are broken here as well (eg: [difftastic on arm64](https://github.com/Wilfred/difftastic/issues/872)).
+Unfortunately, some official binary releases are broken here as well (eg: [difftastic on Raspberry Pi](https://github.com/Wilfred/difftastic/issues/872)).
 
 ### Ecosystem installers
 
 A final option is to use an ecosystem-specific installer. Since they are also project dependency managers, they need a disambiguating subcommand or flag:
 
-* Go: `GOBIN=~/.local/bin go install`
-* Cargo: `cargo binstall` ([get it here](https://github.com/cargo-bins/cargo-binstall); installs to `~/.cargo/bin`)
-* Python: `uv tool install` or `pipx install`
-* Rust: `gem install`
-* NodeJS: `npm install -g` (system global)
+- Go: `GOBIN=~/.local/bin go install`
+- Cargo: `cargo binstall` ([get it here](https://github.com/cargo-bins/cargo-binstall); installs to `~/.cargo/bin`)
+- Python: `uv tool install` or `pipx install`
+- Rust: `gem install`
+- NodeJS: `npm install -g` (system global)

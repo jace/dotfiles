@@ -143,11 +143,13 @@ zstyle ':omz:plugins:eza' 'git-status' yes
 zstyle ':omz:plugins:eza' 'icons' yes
 zstyle ':omz:plugins:eza' 'color-scale' all
 [[ $OSTYPE == linux-android ]] && zstyle ':omz:plugins:eza' 'show-group' no
-[[ -e ~/.iterm2_shell_integration.zsh ]] && source ~/.iterm2_shell_integration.zsh || true
 source $ZSH/oh-my-zsh.sh
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+# iTerm2 integration must be after p10k for the first prompt to work
+[[ -e ~/.iterm2_shell_integration.zsh ]] && source ~/.iterm2_shell_integration.zsh || true
 
 if [[ -n "$ZSH_DEBUGRC" ]]; then
   zprof

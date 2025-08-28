@@ -47,7 +47,7 @@ else
 fi
 
 # Start analysis. Is this a directory?
-if [ -d "$1" ]; then
+if [[ -d "$1" ]]; then
   if [[ "$COLUMNS" -lt 80 ]]; then
     # Narrow screen, use -1 instead of -l
     ls_flags="-1AF"
@@ -64,52 +64,68 @@ if [ -d "$1" ]; then
 fi
 
 # Is this a file?
-if [ -f "$1" ]; then
+if [[ -f "$1" ]]; then
   # Examine file for type (this can return multiple lines for macOS universal binaries, so limit to first)
   mime=$(file -Lb --mime-type "$1" | head -1)
   category=${mime%%/*}
   kind=${mime##*/}
   ext=${1##*.}
 
-  if [ "$mime" = "application/pdf" ]; then
+  if [[ "$mime" == "application/pdf" ]]; then
     if has_cmd timg; then
       timg -pq "-g${COLUMNS}x${LINES}" -- "$1" && exit || exit 1
     fi
     exit 1
-  elif [ "$mime" = "application/vnd.sqlite3" ]; then
+  elif [[ "$mime" == "application/vnd.sqlite3" ]]; then
     if has_cmd sqlite3 bat; then
-      echo -e '.schema\n.dump\n.q' | sqlite3 -- "$1" | bat --color=always -Ppl sql && exit || exit 1
+      echo -e '.schema\n.dump\n.q' | sqlite3 -- "$1" | bat --color always --terminal-width "$COLUMNS" -Ppl sql && exit || exit 1
     fi
     exit 1
-  elif [ "$kind" == "json" ] && [ "$ext" = "ipynb" ] && has_cmd euporie; then
+  elif [[ "$kind" == "json" ]] && [[ "$ext" == "ipynb" ]] && has_cmd euporie; then
     euporie preview --color-depth "$color_depth" --color-scheme default -- "$1" && exit || exit 1
-  elif [ "$category" = "image" ]; then
-    if [ "$kind" != "heic" ] && has_cmd chafa; then
+  elif [[ "$category" == "image" ]]; then
+    if [[ "$kind" != "heic" ]] && has_cmd chafa; then
       chafa -f symbols "--view-size=${COLUMNS}x${LINES}" -- "$1" && exit || exit 1
     elif has_cmd timg; then
       timg -pq "-g${COLUMNS}x${LINES}" --loops=1 --frames=1 -- "$1" && exit || exit 1
     elif has_cmd exiftool bat; then
-      exiftool -- "$1" | bat --color=always -Ppl yaml && exit || exit 1
+      exiftool -- "$1" | bat --color always --terminal-width "$COLUMNS" -Ppl yaml && exit || exit 1
     fi
     exit 1
-  elif [ "$category" = "video" ]; then
+  elif [[ "$category" == "video" ]]; then
     if has_cmd timg; then
       timg -pq "-g${COLUMNS}x${LINES}" --loops=1 --frames=1 -- "$1" && exit || exit 1
     elif has_cmd exiftool bat; then
-      exiftool -- "$1" | bat --color=always -Ppl yaml && exit || exit 1
+      exiftool -- "$1" | bat --color always --terminal-width "$COLUMNS" -Ppl yaml && exit || exit 1
     fi
     exit 1
-  elif [ "$category" = "text" ]; then
-    if [ "$ext" = "md" ]; then
+  elif [[ "$ext" == "docx" ]] && has_cmd doxx; then
+    if has_cmd glow; then
+      doxx --export markdown -- "$1" | CLICOLOR_FORCE=1 glow -s dark -w "$COLUMNS" - && exit || exit 1
+    elif has_cmd mdless; then
+      doxx --export markdown -- "$1" | mdless -cP -w "$COLUMNS" && exit || exit 1
+    elif has_cmd bat; then
+      doxx --export markdown -- "$1" | bat --color always --terminal-width "$COLUMNS" -Ppl markdown && exit || exit 1
+    else
+      doxx --export markdown -- "$1" && exit || exit 1
+    fi
+  elif [[ "$category" == "text" ]]; then
+    if [[ "$ext" == "md" ]]; then
       if has_cmd glow; then
-        glow -- "$1" && exit || exit 1
+        # https://github.com/charmbracelet/glow/issues/654
+        CLICOLOR_FORCE=1 glow -s dark -w "$COLUMNS" -- "$1" && exit || exit 1
       elif has_cmd mdless; then
-        mdless -c -P --images=local -- "$1" && exit || exit 1
+        mdless -c -P -w "$COLUMNS" --images=local -- "$1" && exit || exit 1
       fi
+      # No Markdown renderer? Process as plain text
+    fi
+    # Unknown text, defer to bat if available.
+    # Modern lesspipe will also use bat, but Debian 12 ships an older version
+    if has_cmd bat; then
+      bat -Pp --color always --terminal-width "$COLUMNS" -- "$1" && exit || exit 1
+    else
       exit 1
     fi
-    # Unknown text
-    exit 1
   fi
   # Not text, image, video or PDF. Try fq
   # TODO: Restrict fq to specific mime types

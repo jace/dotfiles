@@ -5,8 +5,11 @@
 # Specify desired highlighting theme (e.g. "TwoDark"). Run `bat --list-themes`
 # for a list of all available themes
 #--theme="TwoDark"
-#--theme="Visual Studio Dark+"
-# Specifying a theme disables automatic light/dark mode detection
+# Specifying --theme disables automatic light/dark mode detection
+# Light theme selected on a colour e-ink display
+--theme-light="Coldark-Cold"
+# Dark theme selected on an AMOLED display
+--theme-dark="Visual Studio Dark+"
 
 # Disable all decorations (header, line numbers)
 --style=plain

@@ -5,7 +5,10 @@
 # Specify desired highlighting theme (e.g. "TwoDark"). Run `bat --list-themes`
 # for a list of all available themes
 #--theme="TwoDark"
---theme="Visual Studio Dark+"
+#--theme="Visual Studio Dark+"
+# Specifying a theme disables automatic light/dark mode detection
+
+# Disable all decorations (header, line numbers)
 --style=plain
 
 # Enable this to use italic text on the terminal. This is not supported on all

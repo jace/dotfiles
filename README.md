@@ -21,6 +21,7 @@ This config depends on ZSH, [Nerd Fonts](https://www.nerdfonts.com/) – I like 
 - [chafa](https://github.com/hpjansson/chafa) - terminal image viewer
 - [difftastic](https://github.com/Wilfred/difftastic) - better diff
 - [direnv](https://direnv.net/)\* - manage environment per folder
+- [doxx](https://github.com/bgreenwell/doxx) - view .docx files
 - [dust](https://github.com/bootandy/dust) - better disk usage visualisation
 - [et](https://eternalterminal.dev/) - ssh without disconnects from flaky internet
 - [eza](https://github.com/eza-community/eza)\* - better ls (also see lsd; eza is slightly faster and more featured)
@@ -55,7 +56,7 @@ Most of these can be installed with `brew|apt|pkg install name…` but some dist
 ### macOS
 
 ```shell
-brew install bat broot chafa chezmoi difftastic direnv dust MisterTea/et/et eza fd ffmpeg font-meslo-lg-nerd-font font-fira-code-nerd-font wader/tap/fq fzf gh git-delta glow grc gron hexyl jc jless jq lsd pandoc procs resvg ripgrep sevenzip timg uv yazi zoxide
+brew install bat broot chafa chezmoi difftastic direnv doxx dust MisterTea/et/et eza fd ffmpeg font-meslo-lg-nerd-font font-fira-code-nerd-font wader/tap/fq fzf gh git-delta glow grc gron hexyl jc jless jq lsd pandoc procs resvg ripgrep sevenzip timg uv yazi zoxide
 ```
 
 Sync iTerm2 config:
@@ -94,7 +95,7 @@ sudo snap install chezmoi --classic
 sudo snap install yazi --classic
 ```
 
-Missing: grc, jless, mcfly, lazygit (available via Linux Homebrew)
+Missing: doxx, grc, jless, mcfly, lazygit (available via Linux Homebrew)
 
 ### Raspberry Pi OS and Armbian
 
@@ -137,7 +138,7 @@ sudo snap install yazi --classic
 ```
 
 Broken: dust, difftastic, lazygit (can't use gh for auth), procs, uv  
-Missing: broot, fd, git-delta, numbat, procs, resvg, grc, jless, mcfly
+Missing: broot, doxx, fd, git-delta, numbat, procs, resvg, grc, jless, mcfly
 
 #### Homebrew Linux
 
@@ -150,7 +151,8 @@ brew install broot dust chezmoi git-delta numbat procs resvg grc jless mcfly uv 
 ```
 
 Broken: difftastic, fd (on Raspberry Pi)  
-Missing: lazygit (no binary bottle)
+Missing: lazygit (no binary bottle)  
+Untested: doxx
 
 Homebrew offers the option to build from source but this requires the entire toolchain for Go and Rust and may overload the device:
 

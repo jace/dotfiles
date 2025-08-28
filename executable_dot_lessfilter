@@ -81,8 +81,10 @@ if [[ -f "$1" ]]; then
       echo -e '.schema\n.dump\n.q' | sqlite3 -- "$1" | bat --color always --terminal-width "$COLUMNS" -Ppl sql && exit || exit 1
     fi
     exit 1
-  elif [[ "$kind" == "json" ]] && [[ "$ext" == "ipynb" ]] && has_cmd euporie; then
-    euporie preview --color-depth "$color_depth" --color-scheme default -- "$1" && exit || exit 1
+  elif [[ "$ext" == "ipynb" ]] && has_cmd euporie-preview; then
+    euporie-preview --color-depth "$color_depth" --color-scheme default -- "$1" && exit || exit 1
+  elif [[ "$ext" == "ipynb" ]] && has_cmd rich; then
+    rich --force-terminal -- "$1" && exit || exit 1
   elif [[ "$category" == "image" ]]; then
     if [[ "$kind" != "heic" ]] && has_cmd chafa; then
       chafa -f symbols "--view-size=${COLUMNS}x${LINES}" -- "$1" && exit || exit 1
@@ -116,6 +118,8 @@ if [[ -f "$1" ]]; then
         CLICOLOR_FORCE=1 glow -s dark -w "$COLUMNS" -- "$1" && exit || exit 1
       elif has_cmd mdless; then
         mdless -c -P -w "$COLUMNS" --images=local -- "$1" && exit || exit 1
+      elif has_cmd rich; then
+        rich --force-terminal -- "$1" && exit || exit 1
       fi
       # No Markdown renderer? Process as plain text
     fi

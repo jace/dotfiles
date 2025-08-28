@@ -1,0 +1,13 @@
+#!/data/data/com.termux/files/usr/bin/bash
+
+if command -v termux-fingerprint >/dev/null; then
+  if termux-fingerprint | grep ERROR_NO_HARDWARE >/dev/null; then
+    # If there is no biometric hardware, use device unlock
+    am start -a android.app.action.CONFIRM_DEVICE_CREDENTIAL >/dev/null
+    read -rsn 1 -p "Press any key to continue"
+    echo
+  fi
+else
+  echo Install termux-api to use termux-unlock
+  exit 1
+fi

@@ -6,10 +6,14 @@
 # for a list of all available themes
 #--theme="TwoDark"
 # Specifying --theme disables automatic light/dark mode detection
+
+# The --theme-(light|dark) options are not available in `batcat` in Debian 12
+# so we specify them via env vars, not here:
+#
 # Light theme selected on a colour e-ink display
---theme-light="Coldark-Cold"
+#--theme-light="Coldark-Cold"
 # Dark theme selected on an AMOLED display
---theme-dark="Visual Studio Dark+"
+#--theme-dark="Visual Studio Dark+"
 
 # Disable all decorations (header, line numbers)
 --style=plain

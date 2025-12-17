@@ -4,10 +4,10 @@ Getting started:
 
 1. [Install Chezmoi](https://www.chezmoi.io/install) and [GitHub CLI](https://github.com/cli/cli#installation) (see below)
 2. Authenticate GitHub: `gh auth login` and if using HTTPS, `gh auth setup-git`
-3. Apply Chezmoi config:
+3. Initialize Chezmoi:
    - HTTPS: `chezmoi init https://github.com/jace/dotfiles.git`
    - SSH: `chezmoi init git@github.com:jace/dotfiles.git`
-   - Next: `chezmoi apply`
+4. Apply: `chezmoi apply`
 
 ### Dependencies
 
@@ -23,7 +23,7 @@ This config depends on ZSH, [Nerd Fonts](https://www.nerdfonts.com/) – I like 
 - [direnv](https://direnv.net/)\* - manage environment per folder
 - [doxx](https://github.com/bgreenwell/doxx) - view .docx files
 - [dust](https://github.com/bootandy/dust) - better disk usage visualisation
-- [et](https://eternalterminal.dev/) - ssh without disconnects from flaky internet
+- [et](https://eternalterminal.dev/) - ssh without disconnects from flaky connections
 - [eza](https://github.com/eza-community/eza)\* - better ls (also see lsd; eza is slightly faster and more featured)
 - [fd](https://github.com/sharkdp/fd) - better find
 - [ffmpeg](https://www.ffmpeg.org/) - multimedia multitool
@@ -99,7 +99,7 @@ Missing: doxx, grc, jless, mcfly, lazygit (available via Linux Homebrew)
 
 ### Raspberry Pi OS and Armbian
 
-These instructions work for both distributions, but while some packages are broken on a Raspberry Pi, they seem to work fine on a Rockchip device. Tested with a Raspberry Pi 5 running RPiOS Debian 12 Bookworm and a Radxa Rock 5B+ running Armbian 25.5.
+These instructions work for both distributions. While some packages are broken on a Raspberry Pi, they seem to work fine on a Rockchip device. Tested with a Raspberry Pi 5 (RPiOS Debian 12 Bookworm) and a Radxa Rock 5B+ (Armbian 25.5).
 
 ```shell
 sudo mkdir -p /etc/apt/keyrings
@@ -180,7 +180,7 @@ Unfortunately, some official binary releases are broken here as well (eg: [difft
 A final option is to use an ecosystem-specific installer. Since they are also project dependency managers, they need a disambiguating subcommand or flag:
 
 - Go: `GOBIN=~/.local/bin go install`
-- Cargo: `cargo binstall` ([get it here](https://github.com/cargo-bins/cargo-binstall); installs to `~/.cargo/bin`)
+- Rust: `cargo binstall` ([get it here](https://github.com/cargo-bins/cargo-binstall); installs to `~/.cargo/bin`)
 - Python: `uv tool install` or `pipx install`
-- Rust: `gem install`
+- Ruby: `gem install`
 - NodeJS: `npm install -g` (system global)

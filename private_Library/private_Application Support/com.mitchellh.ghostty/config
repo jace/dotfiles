@@ -1,0 +1,22 @@
+# macOS titlebar styles
+# native - boring OS style, has proxy icon
+# transparent - default, matches terminal colour scheme, has proxy icon
+# tabs - top-level tabs, no folder icon
+# hidden - no titlebar, no tabs
+macos-titlebar-style = tabs
+
+# Alt shortcuts are more important than Unicode chars
+macos-option-as-alt = left
+
+background-opacity = 0.95
+background-blur-radius = 20
+mouse-hide-while-typing = true
+
+# The default TERM=xterm-ghostty breaks SSH connections unless overridden
+# See https://ghostty.org/docs/help/terminfo
+# SSH is configured with SetEnv TERM, but eternal-terminal does not honour it
+# term = xterm-256color
+
+keybind = global:f12=toggle_quick_terminal
+quick-terminal-animation-duration = 0.1
+shell-integration-features = ssh-terminfo,ssh-env

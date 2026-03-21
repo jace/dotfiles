@@ -9,6 +9,7 @@ README.md
 {{ if ne .chezmoi.os "darwin" }}
 # Ignore if not macOS
 .config/iterm2
+.config/karabiner
 Library
 {{ end }}
 

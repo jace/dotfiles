@@ -56,7 +56,7 @@ Most of these can be installed with `brew|apt|pkg install name…` but some dist
 ### macOS
 
 ```shell
-brew install bat broot chafa chezmoi difftastic direnv doxx dust MisterTea/et/et eza fd ffmpeg font-meslo-lg-nerd-font font-fira-code-nerd-font wader/tap/fq fzf gh git-delta glow grc gron hexyl jc jless jq lsd pandoc procs resvg ripgrep sevenzip timg uv yazi zoxide
+brew install bat broot chafa chezmoi difftastic direnv doxx dust et eza fd ffmpeg font-meslo-lg-nerd-font font-fira-code-nerd-font wader/tap/fq fzf gh git-delta glow grc gron hexyl jc jless jq lsd pandoc procs resvg ripgrep sevenzip timg uv yazi zoxide
 ```
 
 Sync iTerm2 config:
@@ -129,7 +129,7 @@ For the remaining tools or for the latest versions, use another package manager.
 
 #### Snap
 
-```
+```shell
 # Install snap
 sudo apt install snapd
 # Install snap-packaged tools
@@ -142,7 +142,7 @@ Missing: broot, doxx, fd, git-delta, numbat, procs, resvg, grc, jless, mcfly
 
 #### Homebrew Linux
 
-```
+```shell
 # Install Homebrew
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
@@ -156,7 +156,7 @@ Untested: doxx
 
 Homebrew offers the option to build from source but this requires the entire toolchain for Go and Rust and may overload the device:
 
-```
+```shell
 brew install --build-from-source fd lazygit difftastic
 ```
 

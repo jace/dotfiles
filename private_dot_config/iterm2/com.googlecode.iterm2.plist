@@ -722,6 +722,8 @@ The script should do this: \(ai.prompt)</string>
 	<integer>4</integer>
 	<key>MaxVertically</key>
 	<true/>
+	<key>NeverBlockSystemShutdown</key>
+	<true/>
 	<key>NeverWarnAboutShortLivedSessions_594B1B2B-DDBF-4094-8AE8-277D96268DE8</key>
 	<true/>
 	<key>NeverWarnAboutShortLivedSessions_594B1B2B-DDBF-4094-8AE8-277D96268DE8_selection</key>
@@ -958,7 +960,7 @@ The script should do this: \(ai.prompt)</string>
 				<real>0.90980392694473267</real>
 			</dict>
 			<key>Application Keypad Allowed</key>
-			<false/>
+			<true/>
 			<key>BM Growl</key>
 			<true/>
 			<key>Background Color</key>
@@ -1432,7 +1434,7 @@ The script should do this: \(ai.prompt)</string>
 			<key>Only The Default BG Color Uses Transparency</key>
 			<false/>
 			<key>Open Password Manager Automatically</key>
-			<false/>
+			<true/>
 			<key>Option Key Sends</key>
 			<integer>2</integer>
 			<key>Place Prompt at First Column</key>
@@ -2245,7 +2247,7 @@ The script should do this: \(ai.prompt)</string>
 				<real>0.90980392694473267</real>
 			</dict>
 			<key>Application Keypad Allowed</key>
-			<false/>
+			<true/>
 			<key>BM Growl</key>
 			<true/>
 			<key>Background Color</key>
@@ -2723,7 +2725,7 @@ The script should do this: \(ai.prompt)</string>
 			<key>Only The Default BG Color Uses Transparency</key>
 			<false/>
 			<key>Open Password Manager Automatically</key>
-			<false/>
+			<true/>
 			<key>Option Key Sends</key>
 			<integer>2</integer>
 			<key>Place Prompt at First Column</key>
@@ -3281,6 +3283,29 @@ The script should do this: \(ai.prompt)</string>
 			<integer>2</integer>
 			<key>Transparency</key>
 			<real>0.0</real>
+			<key>Triggers</key>
+			<array>
+				<dict>
+					<key>action</key>
+					<string>PasswordTrigger</string>
+					<key>contentregex</key>
+					<string></string>
+					<key>disabled</key>
+					<integer>0</integer>
+					<key>matchType</key>
+					<integer>0</integer>
+					<key>name</key>
+					<string>Password prompt</string>
+					<key>parameter</key>
+					<string></string>
+					<key>partial</key>
+					<true/>
+					<key>regex</key>
+					<string>^(P|p)assword:\s$</string>
+				</dict>
+			</array>
+			<key>Triggers Use Interpolated Strings</key>
+			<false/>
 			<key>Unlimited Scrollback</key>
 			<true/>
 			<key>Use Bold Font</key>
@@ -3360,7 +3385,7 @@ The script should do this: \(ai.prompt)</string>
 	<key>SeparateStatusBarsPerPane</key>
 	<false/>
 	<key>ShowFullScreenTabBar</key>
-	<false/>
+	<true/>
 	<key>ShowNewOutputIndicator</key>
 	<true/>
 	<key>ShowYellowMarkForJobStoppedBySignal</key>
@@ -3383,6 +3408,8 @@ The script should do this: \(ai.prompt)</string>
 	<integer>0</integer>
 	<key>TabsHaveCloseButton</key>
 	<false/>
+	<key>ThreeFingerEmulates</key>
+	<true/>
 	<key>TmuxSyncClipboard</key>
 	<true/>
 	<key>TmuxUnpauseAutomatically</key>

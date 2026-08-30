@@ -78,7 +78,12 @@ if [[ -f "$1" ]]; then
     exit 1
   elif [[ "$mime" == "application/vnd.sqlite3" ]]; then
     if has_cmd sqlite3 bat; then
-      echo -e '.schema\n.dump\n.q' | sqlite3 -- "$1" | bat --color always --terminal-width "$COLUMNS" -Ppl sql && exit || exit 1
+      (
+        echo "-- SQLite .schema and .dump from"
+        echo "-- $1"
+        echo
+        echo -e '.schema\n.dump\n.q' | sqlite3 -- "$1"
+      ) | bat --color always --terminal-width "$COLUMNS" -Ppl sql && exit || exit 1
     fi
     exit 1
   elif [[ "$ext" == "ipynb" ]] && has_cmd euporie-preview; then

@@ -3595,7 +3595,7 @@ The script should do this: \(ai.prompt)</string>
 				<real>1</real>
 			</dict>
 			<key>Badge Text</key>
-			<string>tmux \(tmuxClientName)</string>
+			<string>tmux \(tmuxWindow) \(tmuxWindowPane)</string>
 			<key>Blink Allowed</key>
 			<true/>
 			<key>Blinking Cursor</key>

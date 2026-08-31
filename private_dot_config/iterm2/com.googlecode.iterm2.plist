@@ -3598,8 +3598,18 @@ The script should do this: \(ai.prompt)</string>
 				<key>Red Component</key>
 				<real>1</real>
 			</dict>
+			<key>Badge Font</key>
+			<string>Helvetica-Bold</string>
+			<key>Badge Max Height</key>
+			<real>0.10000000000000001</real>
+			<key>Badge Max Width</key>
+			<real>0.5</real>
+			<key>Badge Right Margin</key>
+			<real>10</real>
 			<key>Badge Text</key>
-			<string>\(profileName) \(tmuxWindowPane)</string>
+			<string>\(profileName) \(tmuxWindowPaneIndex)</string>
+			<key>Badge Top Margin</key>
+			<real>10</real>
 			<key>Blink Allowed</key>
 			<true/>
 			<key>Blinking Cursor</key>

@@ -18,5 +18,6 @@ mouse-hide-while-typing = true
 # term = xterm-256color
 
 keybind = global:f12=toggle_quick_terminal
+keybind = alt+backspace=text:\x1b\x7f
 quick-terminal-animation-duration = 0.1
 shell-integration-features = ssh-terminfo,ssh-env

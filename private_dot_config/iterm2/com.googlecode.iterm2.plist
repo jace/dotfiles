@@ -726,6 +726,10 @@ The script should do this: \(ai.prompt)</string>
 	<true/>
 	<key>NeverBlockSystemShutdown</key>
 	<true/>
+	<key>NeverWarnAboutShortLivedSessions_37CB3608-A0CB-4248-BD31-183473B749B2</key>
+	<true/>
+	<key>NeverWarnAboutShortLivedSessions_37CB3608-A0CB-4248-BD31-183473B749B2_selection</key>
+	<integer>0</integer>
 	<key>NeverWarnAboutShortLivedSessions_594B1B2B-DDBF-4094-8AE8-277D96268DE8</key>
 	<true/>
 	<key>NeverWarnAboutShortLivedSessions_594B1B2B-DDBF-4094-8AE8-277D96268DE8_selection</key>
@@ -1486,7 +1490,7 @@ The script should do this: \(ai.prompt)</string>
 			<key>Semantic History</key>
 			<dict>
 				<key>action</key>
-				<string>editor</string>
+				<string>best editor</string>
 				<key>editor</key>
 				<string>com.microsoft.VSCode</string>
 				<key>text</key>
@@ -2777,11 +2781,11 @@ The script should do this: \(ai.prompt)</string>
 			<key>Semantic History</key>
 			<dict>
 				<key>action</key>
-				<string>editor</string>
+				<string>send text</string>
 				<key>editor</key>
 				<string>com.microsoft.VSCode</string>
 				<key>text</key>
-				<string></string>
+				<string>\1</string>
 			</dict>
 			<key>Send Code When Idle</key>
 			<false/>
@@ -3595,7 +3599,7 @@ The script should do this: \(ai.prompt)</string>
 				<real>1</real>
 			</dict>
 			<key>Badge Text</key>
-			<string>tmux \(tmuxWindow) \(tmuxWindowPane)</string>
+			<string>\(profileName) \(tmuxWindowPane)</string>
 			<key>Blink Allowed</key>
 			<true/>
 			<key>Blinking Cursor</key>
@@ -3675,7 +3679,7 @@ The script should do this: \(ai.prompt)</string>
 			<key>Custom Command</key>
 			<string>Yes</string>
 			<key>Custom Directory</key>
-			<string>Advanced</string>
+			<string>No</string>
 			<key>Custom Locale</key>
 			<string>en_US.UTF-8</string>
 			<key>Default Bookmark</key>
@@ -4057,7 +4061,7 @@ The script should do this: \(ai.prompt)</string>
 			<key>Screen</key>
 			<integer>-1</integer>
 			<key>Scrollback Lines</key>
-			<integer>1000</integer>
+			<integer>0</integer>
 			<key>Scrollback in Alternate Screen</key>
 			<false/>
 			<key>Selected Text Color</key>
@@ -4089,7 +4093,7 @@ The script should do this: \(ai.prompt)</string>
 			<key>Semantic History</key>
 			<dict>
 				<key>action</key>
-				<string>editor</string>
+				<string>best editor</string>
 				<key>editor</key>
 				<string>com.microsoft.VSCode</string>
 				<key>text</key>
@@ -4594,7 +4598,7 @@ The script should do this: \(ai.prompt)</string>
 			<key>Thin Strokes</key>
 			<integer>1</integer>
 			<key>Title Components</key>
-			<integer>2</integer>
+			<integer>3</integer>
 			<key>Transparency</key>
 			<real>0.0</real>
 			<key>Unlimited Scrollback</key>

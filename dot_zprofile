@@ -1,9 +1,13 @@
 # Flag for ~/.zshrc to avoid double sourcing
 export DOT_ZPROFILE_SOURCED=1
 
-# Linux desktops source ~/.profile on login but CLI and macOS don't.
-# Source if not already done
-if [[ "${DOT_PROFILE_SOURCED:-}" != 1 ]]; then
+# Linux desktops directly source ~/.profile on desktop login while zsh ignores it.
+# That means console/ssh and macOS terminals have missed whatever was in ~/.profile
+# so we apply two criteria:
+# 1. If this is a login shell, always source ~/.profile
+# 2. If this is not a login shell but ~/.zshrc called us to bootstrap,
+#    check ~/.profile's already-sourced flag before sourcing it again
+if [[ -o login ]] || [[ "${DOT_PROFILE_SOURCED:-}" != 1 ]]; then
   [[ -r "$HOME/.profile" ]] && emulate sh -c '. "$HOME/.profile"'
 fi
 

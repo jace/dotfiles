@@ -36,6 +36,8 @@ fi
 
 # If we have Homebrew, setup its environment
 if [ -n "$BREW_LOCATION" ]; then
+  # Unset HOMEBREW_PREFIX in nested login shells to force shellenv bootstrap
+  unset HOMEBREW_PREFIX
   eval "$("$BREW_LOCATION" shellenv)"
 
   # Set HOMEBREW_PREFIX if necessary

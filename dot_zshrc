@@ -1,10 +1,16 @@
+# Enable profiling if we're debugging zshrc performance
 if [[ -n "$ZSH_DEBUGRC" ]]; then
   zmodload zsh/zprof
 fi
+
+# Prevent dupe entries in PATH and FPATH for interactive sessions only
+typeset -U path PATH fpath FPATH
+
 if [[ "${DOT_ZPROFILE_SOURCED:-}" != 1 ]]; then
   # ~/.zprofile is not sourced in Linux desktop login,
-  # and Linux terminal emulators don't use login shells
-  [[ -r "$HOME/.zprofile" ]] && source "$HOME/.zprofile"
+  # and Linux terminal emulators don't use login shells,
+  # so we bootstrap ~/.zprofile with a heads-up its via ~/.zshrc
+  [[ -r "$HOME/.zprofile" ]] && VIA_DOT_ZSHRC=1 source "$HOME/.zprofile"
 fi
 
 # Disable iTerm2 prompt marker

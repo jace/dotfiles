@@ -1,5 +1,9 @@
+AGENTS.md
 README.md
+install.sh
 .oh-my-zsh/cache
+# iTerm2 rewrites its settings file while running, so chezmoi can't manage it
+.config/iterm2
 
 {{- if eq .chezmoi.os "darwin" }}
 # Ignore on macOS
@@ -8,7 +12,6 @@ README.md
 
 {{ if ne .chezmoi.os "darwin" }}
 # Ignore if not macOS
-.config/iterm2
 .config/karabiner
 Library
 {{ end }}
@@ -19,4 +22,24 @@ Library
 .shortcuts
 .local/bin/desktop-session
 .local/bin/termux-*
+{{ end }}
+
+{{ if not (lookPath "zsh") }}
+# No zsh here: skip its config and the plugins chezmoi would
+# otherwise clone (externals inside a folder need the /** pattern too)
+.oh-my-zsh
+.oh-my-zsh/**
+.oh-my-zsh-custom
+.oh-my-zsh-custom/**
+.p10k.zsh
+.zshenv
+.zprofile
+.zshrc
+.iterm2_shell_integration.zsh
+{{ end }}
+
+{{ if not (lookPath "tmux") }}
+# No tmux here: skip its config and the plugins chezmoi would otherwise clone
+.config/tmux
+.config/tmux/**
 {{ end }}

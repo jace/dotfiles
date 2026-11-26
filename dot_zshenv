@@ -1,2 +1,11 @@
+# `ssh host <command>` runs a non-login, non-interactive zsh that reads only
+# this file. We read ~/.profile to bootstap paths so the tools can be found.
+if [[ -n $SSH_CONNECTION && ! -o login && ! -o interactive && ${DOT_PROFILE_SOURCED:-} != 1 ]]; then
+  [[ -r "$HOME/.profile" ]] && emulate sh -c '. "$HOME/.profile"'
+fi
+
+# Coding agents keep trying bash syntax on zsh and declaring footguns, so we just give them bash syntax.
+# This could blow up if they actually switch to zsh syntax.
 # https://x.com/dedene/status/2115119465033548224
-[[ ! -o interactive && ( -n $CLAUDECODE || -n $CODEX_THREAD_ID ) ]] && setopt sh_word_split no_nomatch no_equals
+# Only in the agent's own login shell: zsh scripts it runs inherit the variables.
+[[ -o login && ! -o interactive && ( -n $CLAUDECODE || -n $CODEX_THREAD_ID ) ]] && setopt sh_word_split no_nomatch no_equals

@@ -6,6 +6,11 @@ fi
 if (($+commands[difftastic])) && ((!$+commands[difft])); then
   alias difft=difftastic
 fi
-if (($+commands[fd-find])) && ((!$+commands[fd])); then
-  alias fd=fd-find
+if ((!$+commands[fd])); then
+  # Debian's fd-find package installs the command as fdfind
+  if (($+commands[fdfind])); then
+    alias fd=fdfind
+  elif (($+commands[fd-find])); then
+    alias fd=fd-find
+  fi
 fi

@@ -53,8 +53,10 @@ fi
 
 # Add local bin paths
 for DIR in "$HOME/.cargo/bin" "$HOME/.local/bin" "$HOME/bin"; do
-  if [ -d "$DIR" ] && [[ !${path[(Ie)$DIR]} ]]; then
-    path=("$DIR" $path)
+  if [[ -d "$DIR" ]]; then
+    # ~/.profile already added these; move them ahead of the gnubin folders
+    # added above, so personal tools still win
+    path=("$DIR" ${path:#$DIR})
   fi
 done
 

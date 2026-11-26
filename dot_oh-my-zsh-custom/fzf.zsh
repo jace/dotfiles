@@ -1,3 +1,6 @@
+# fzf options and key bindings, only when fzf is installed
+(( $+commands[fzf] )) || return 0
+
 export FZF_DEFAULT_OPTS=" --border sharp --layout reverse --prompt '∷ ' --pointer ▶ --marker ⇒"
 # Use bat to preview files in the Ctrl+T file browser
 export FZF_CTRL_T_OPTS=' --height=100% --preview="bat --line-range=:500 --color=always {}" --preview-window=right:60%:wrap'

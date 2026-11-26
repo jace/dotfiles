@@ -1,11 +1,15 @@
 # This is a minimal ~/.profile to bootstrap Homebrew if present.
 # See ~/.zprofile and ~/.zshrc for the full environmment setup
+# It's read by every shell (dash, bash, and zsh via `emulate sh`),
+# so keep it to plain POSIX sh.
 
-# Flag for ~/.zprofile to avoid double sourcing
+# Flag for ~/.zprofile and ~/.bashrc to avoid double sourcing
 export DOT_PROFILE_SOURCED=1
 
 # Setup Homebrew and $PATH
-if [ "$OSTYPE" = linux-android ]; then
+# $OSTYPE is only set by bash and zsh, so also test Termux's own variables
+if [ "$OSTYPE" = linux-android ] || [ -n "$TERMUX_VERSION" ] ||
+  case "$PREFIX" in */com.termux/*) true ;; *) false ;; esac; then
   # Do not probe root-level folders on Android.
   # Assume no Homebrew
   BREW_LOCATION=
@@ -46,3 +50,23 @@ if [ -n "$BREW_LOCATION" ]; then
   fi
 fi
 unset BREW_LOCATION
+
+# Add local bin paths (here rather than ~/.zprofile so bash and sh get them too)
+for DIR in "$HOME/.cargo/bin" "$HOME/.local/bin" "$HOME/bin"; do
+  if [ -d "$DIR" ]; then
+    case ":$PATH:" in
+      *":$DIR:"*) ;;
+      *) PATH="$DIR:$PATH" ;;
+    esac
+  fi
+done
+export PATH
+unset DIR
+
+# A bash login shell reads this file but not ~/.bashrc, so read it here
+# (~/.bashrc skips ~/.profile, which has already set its flag)
+if [ -n "$BASH_VERSION" ] && [ -z "$DOT_BASHRC_SOURCED" ] && [ -r "$HOME/.bashrc" ]; then
+  case $- in
+    *i*) . "$HOME/.bashrc" ;;
+  esac
+fi

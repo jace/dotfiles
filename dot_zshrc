@@ -52,7 +52,9 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 # HYPHEN_INSENSITIVE="true"
 
 # Uncomment one of the following lines to change the auto-update behavior
-# zstyle ':omz:update' mode disabled  # disable automatic updates
+# chezmoi keeps oh-my-zsh up to date (.chezmoiexternal.toml); its own updater
+# would change files chezmoi manages, which chezmoi then reports as modified
+zstyle ':omz:update' mode disabled  # disable automatic updates
 # zstyle ':omz:update' mode auto      # update automatically without asking
 # zstyle ':omz:update' mode reminder  # just remind me to update when it's time
 
@@ -100,6 +102,9 @@ ZSH_COMPDUMP="$ZSH/cache/.zcompdump"
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
+# direnv, eza, fzf and zoxide are quiet guarded stand-ins in $ZSH_CUSTOM/plugins
+# that do nothing when the tool isn't installed; fzf also loads fzf-tab,
+# fzf-tab-source and forgit, so it must stay ahead of the last two plugins.
 plugins=(
   gnu-utils
   git
@@ -110,9 +115,7 @@ plugins=(
   direnv
   docker
   eza
-  fzf-tab
-  fzf-tab-source
-  forgit
+  fzf
   pip
   zoxide
   zsh-shift-select

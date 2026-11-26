@@ -2,3 +2,5 @@
 # (tmux.conf has its own theme; chezmoi clones the plugins it uses)
 .config/tmux/plugins/tpm
 .config/tmux/themes
+# Redraw-after-cd hook, replaced by tmux.conf's pane-title-changed hook
+.oh-my-zsh-custom/tmux.zsh

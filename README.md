@@ -10,23 +10,23 @@ One line, on any target platform:
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/jace/dotfiles/main/install.sh)"
 ```
 
-(or `wget -qO-` in place of `curl -fsSL`). It asks which tier of tools you want (below) and asks before installing anything. Tools come from the system's package manager first, then Homebrew, then Snap, and Python tools last from `uv tool install`. If the tier has tools none of them can install, it offers to install Homebrew; declining skips those tools, and chezmoi then comes from its own installer. Finally it sets up the dotfiles with `chezmoi init`, showing the changes before applying them. Prefix `DOTFILES_YES=1` to answer yes to everything.
+(or `wget -qO-` in place of `curl -fsSL`). It installs Chezmoi and the recommended tools from the list below, trying with the system's package manager first, then Homebrew if present, then Snap, and Python tools last with `uv tool install`. If the selected tier has tools none of them can install, it offers to install Homebrew. Declining skips those tools, and Chezmoi then comes from its own installer. Finally it sets up the dotfiles with `chezmoi init`, showing the changes before applying them. Prefix `DOTFILES_YES=1` to answer yes to all prompts.
 
-By hand:
+#### By hand
 
-1. [Install Chezmoi](https://www.chezmoi.io/install). It isn't packaged in Debian stable: Debian has it from forky (testing) and Ubuntu from 26.10, so elsewhere use `sh -c "$(curl -fsLS get.chezmoi.io)" -- -b ~/.local/bin`. If you prefer a managed Chezmoi, see the per-platform notes below for options.
-2. Optionally install the [GitHub CLI](https://github.com/cli/cli#installation) and authenticate: `gh auth login`, and if using HTTPS, `gh auth setup-git`.
+1. [Install Chezmoi](https://www.chezmoi.io/install). Homebrew and Snap carry it but mainstream distro packaging hasn't caught up. Install directly with `sh -c "$(curl -fsLS get.chezmoi.io)" -- -b ~/.local/bin` or consult the per-platform notes below.
+2. Optionally install the [GitHub CLI](https://github.com/cli/cli#installation) and authenticate: `gh auth login`. If using HTTPS, `gh auth setup-git`.
 3. Initialize Chezmoi:
    - HTTPS: `chezmoi init https://github.com/jace/dotfiles.git`
    - SSH: `chezmoi init git@github.com:jace/dotfiles.git`
-4. Review with `chezmoi diff`, then apply: `chezmoi apply`.
-5. Make zsh your login shell if you want the full setup: `chsh -s $(which zsh) && zsh -c "chezmoi apply"`.
+4. Review with `chezmoi diff`, then apply with `chezmoi apply`. For future updates, `chezmoi update`.
+5. Make zsh your login shell if you want the full setup: `chsh -s $(which zsh)`.
 
 Maintenance notes for agents (and humans) are in [AGENTS.md](AGENTS.md).
 
 ### When the login shell can't be changed
 
-If your system doesn't allow `chsh` to switch to `zsh`, Put this in `~/.bashrc.local`, adjusting the path:
+If your system doesn't allow `chsh` to switch to `zsh`, put this in `~/.bashrc.local`, adjusting the path:
 
 ```shell
 if [ -x /usr/local/bin/zsh ]; then
@@ -37,11 +37,10 @@ fi
 
 ### Dependencies
 
-Fonts: [Nerd Fonts](https://www.nerdfonts.com/) for icons in the prompt, eza and yazi. I use MesloLGS in terminals and Fira Code in editors. Only machines with a local terminal app need them; a terminal over SSH uses the fonts of the machine you're sitting at. `install.sh` offers them on desktops:
+Fonts: [Nerd Fonts](https://www.nerdfonts.com/) for icons in the prompt, eza, yazi and tmux. I prefer MesloLGS in terminals and Fira Code in editors. Only machines with a local terminal app need them and `install.sh` will check for you.
 
-- macOS: `brew install --cask font-meslo-lg-nerd-font font-fira-code-nerd-font`
-- Linux desktops with Homebrew: the same command; Homebrew installs fonts into `~/.local/share/fonts` on Linux.
-- Linux desktops without Homebrew:
+- **macOS and Linux desktops with Homebrew**: `brew install --cask font-meslo-lg-nerd-font font-fira-code-nerd-font`
+- **Linux desktops without Homebrew**:
 
   ```shell
   mkdir -p ~/.local/share/fonts/NerdFonts
@@ -51,7 +50,7 @@ Fonts: [Nerd Fonts](https://www.nerdfonts.com/) for icons in the prompt, eza and
   fc-cache -f
   ```
 
-- Termux: the terminal font is the single file `~/.termux/font.ttf`. `install.sh` puts MesloLGS there if there's none yet; by hand, extract `MesloLGSNerdFont-Regular.ttf` from the same `Meslo.tar.xz` to that path and run `termux-reload-settings`.
+- **Termux**: the terminal font is the single file `~/.termux/font.ttf`. `install.sh` puts MesloLGS there if there's none yet; by hand, extract `MesloLGSNerdFont-Regular.ttf` from the same `Meslo.tar.xz` to that path and run `termux-reload-settings`.
 
 Tools come in tiers. Each tier includes the ones above it. `install.sh` installs a tier; the platform sections below have the same lists as package-manager commands, with what each platform lacks.
 
@@ -70,7 +69,7 @@ A comfortable shell on any machine you log in to.
 - [tmux](https://github.com/tmux/tmux) - terminal sessions that survive disconnects; panes and windows
 - [et](https://eternalterminal.dev/) - Eternal Terminal: ssh sessions that survive flaky connections and sleep (`etserver` runs on the remote end)
 - [ssh-import-id](https://launchpad.net/ssh-import-id) - add your GitHub or Launchpad public keys to `authorized_keys` (`ssh-import-id gh:<user>`)
-- less, [rsync](https://rsync.samba.org/), [htop](https://htop.dev/), [ncdu](https://dev.yorhel.nl/ncdu) - pager, file sync, process and disk-usage viewers
+- [less](https://www.gnu.org/software/less/)/[lesspipe](https://lesspipe.org/), [rsync](https://rsync.samba.org/), [htop](https://htop.dev/), [ncdu](https://dev.yorhel.nl/ncdu) - pager, file sync, process and disk-usage viewers.
 - [jq](https://jqlang.org/) - JSON processor
 - [ripgrep](https://github.com/BurntSushi/ripgrep) - better grep
 - [fd](https://github.com/sharkdp/fd) - better find
@@ -90,7 +89,7 @@ Shell and files:
 - [dust](https://github.com/bootandy/dust) - better disk usage visualisation
 - [duf](https://github.com/muesli/duf) - better df
 - [procs](https://github.com/dalance/procs) - better ps
-- [btop](https://github.com/aristocratos/btop) - system monitor
+- [btop](https://github.com/aristocratos/btop) - better system monitor
 - [mcfly](https://github.com/cantino/mcfly) - better ^R command history
 - [uv](https://docs.astral.sh/uv/) - Python tool and dependency installer
 - [gh](https://github.com/cli/cli) - GitHub CLI (for auth)
@@ -133,22 +132,22 @@ Installed by `install.sh toolbox`:
 ### macOS
 
 ```shell
-brew install bat broot btop chafa chezmoi difftastic direnv doxx duf dust et eza fd ffmpeg font-meslo-lg-nerd-font font-fira-code-nerd-font wader/tap/fq fzf gh git-delta glow grc gron hexyl htop jc jless jq lazygit lsd mcfly ncdu numbat pandoc procs resvg ripgrep sevenzip timg tmux uv yazi zoxide
+brew install bat broot btop chafa chezmoi difftastic direnv doxx duf dust et eza fd ffmpeg font-meslo-lg-nerd-font font-fira-code-nerd-font wader/tap/fq fzf gh git-delta glow grc gron hexyl htop jc jless jq lazygit lesspipe lsd mcfly ncdu numbat pandoc procs resvg ripgrep sevenzip timg tmux uv yazi zoxide
 uv tool install ssh-import-id
 ```
 
 ### Termux
 
 ```shell
-pkg install 7zip bat broot chafa chezmoi difftastic direnv dust et eza fd ffmpeg fq fzf gh git-delta glow gron hexyl jc jless jq lsd pandoc procs resvg ripgrep timg uv yazi zoxide zsh
+pkg install 7zip bat broot chafa chezmoi difftastic direnv dust et eza fd ffmpeg fq fzf gh git-delta glow gron hexyl jc jless jq lesspipe lsd pandoc procs resvg ripgrep timg uv yazi zoxide zsh
 uv tool install ssh-import-id
 ```
 
-Missing: fq, grc, jc, numbat, resvg
+Missing: fq, grc, jc, numbat, resvg. btop is only in the root repository (`pkg install root-repo`) and needs root to read system stats.
 
 ### Debian 13 (trixie)
 
-Trixie packages most of the essential and recommended tiers. Eternal Terminal comes from its own repository, and the GitHub CLI's repository has newer versions than Debian's own `gh` (2.46). Debian has no `add-apt-repository`, so add them by hand:
+Trixie packages most of the essential and recommended tiers. Eternal Terminal comes from its own repository. GitHub CLI's repository has newer versions:
 
 ```shell
 sudo mkdir -p /etc/apt/keyrings
@@ -164,13 +163,11 @@ sudo apt install git curl zsh tmux et ssh-import-id less rsync htop ncdu jq ripg
   eza broot fq gron jc glow git-delta lazygit du-dust duf procs btop hexyl numbat chafa timg resvg ffmpeg pandoc 7zip gh grc lsd
 ```
 
-Debian names: `bat` installs as `batcat` and `fd-find` as `fdfind`. The shell config aliases both back.
-
-Get Chezmoi and the others from another package manager like Snap or Homebrew.
+Debian installs `bat` as `batcat` and `fd-find` as `fdfind`. The shell config aliases both back.  Get Chezmoi and the others from another package manager like Snap or Homebrew.
 
 ### Ubuntu 26.04
 
-Ubuntu packages nearly all of the essential and recommended tiers in universe. Eternal Terminal comes from its PPA. For a newer `gh` than Ubuntu's (2.46), add GitHub's repository as in the Debian section.
+Ubuntu packages nearly all of the essential and recommended tiers in universe. Eternal Terminal comes from its PPA. GitHub CLI's repository has newer versions (see Debian notes):
 
 ```shell
 # Add the Eternal Terminal PPA (a release upgrade disables PPAs: run this again afterwards)
@@ -184,7 +181,7 @@ Get Chezmoi and the others from another package manager like Snap or Homebrew.
 
 ### Raspberry Pi OS and Armbian
 
-Releases based on Debian trixie can follow the Debian section above. These instructions are for releases based on bookworm and work for both distributions. 
+Releases based on Debian trixie can follow the Debian section above. These instructions are for releases based on Bookworm and work for both distributions.
 
 ```shell
 sudo mkdir -p /etc/apt/keyrings
@@ -202,7 +199,7 @@ curl -fsSL https://repo.charm.sh/apt/gpg.key | sudo gpg --dearmor -o /etc/apt/ke
 echo "deb [signed-by=/etc/apt/keyrings/charm.gpg] https://repo.charm.sh/apt/ * *" | sudo tee /etc/apt/sources.list.d/charm.list
 # Install deb-packaged tools
 sudo apt update
-sudo apt install 7zip bat chafa direnv et eza ffmpeg fd-find fq fzf gh glow gron hexyl jc jq lsd pandoc ripgrep timg zoxide zsh
+sudo apt install 7zip bat btop chafa direnv et eza ffmpeg fd-find fq fzf gh glow gron hexyl jc jq lsd pandoc ripgrep timg zoxide zsh
 ```
 
 ### Other package managers
@@ -227,6 +224,8 @@ sudo apt install snapd
 sudo snap install chezmoi --classic
 sudo snap install yazi --classic
 ```
+
+All other packages by just their names.
 
 #### Homebrew Linux
 

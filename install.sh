@@ -21,7 +21,7 @@ REPO=https://github.com/jace/dotfiles.git
 # The tiers. Names are the tool's usual name; pkg_name maps them per package
 # manager. Keep these lists in step with the tables in README.md.
 TIER_MINIMAL="git curl chezmoi"
-TIER_ESSENTIAL="zsh tmux et ssh-import-id less rsync htop ncdu jq ripgrep fd bat fzf zoxide direnv"
+TIER_ESSENTIAL="zsh tmux et ssh-import-id less lesspipe rsync htop ncdu jq ripgrep fd bat fzf zoxide direnv"
 TIER_RECOMMENDED="eza yazi broot jless fq gron jc glow git-delta difftastic lazygit mcfly dust duf procs btop hexyl numbat chafa timg resvg ffmpeg pandoc doxx 7zip uv gh grc lsd"
 TIER_TOOLBOX="rclone mtr nmap iperf3 tcpdump smartmontools tio picocom"
 
@@ -129,6 +129,8 @@ find_brew() {
 pkg_name() {
   case "$1:$2" in
     apt:fd) echo fd-find ;;
+    # Debian and Fedora ship lesspipe in the less package
+    apt:lesspipe | dnf:lesspipe) echo less ;;
     apt:dust) echo du-dust ;;
     apt:mtr) echo mtr-tiny ;;
     brew:7zip) echo sevenzip ;;
@@ -187,6 +189,7 @@ installed() {
   case $1 in
     bat) cmds="bat batcat" ;;
     fd) cmds="fd fdfind" ;;
+    lesspipe) cmds="lesspipe.sh lesspipe" ;;
     ripgrep) cmds=rg ;;
     git-delta) cmds='delta' ;;
     difftastic) cmds=difft ;;

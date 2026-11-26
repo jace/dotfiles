@@ -37,6 +37,12 @@ unset FILE
 # Optional tools, each only if installed
 command -v direnv >/dev/null 2>&1 && eval "$(direnv hook bash)"
 command -v zoxide >/dev/null 2>&1 && eval "$(zoxide init bash)"
+# less shows archives, PDFs, images and more through lesspipe
+if command -v lesspipe.sh >/dev/null 2>&1; then
+  eval "$(lesspipe.sh)"
+elif command -v lesspipe >/dev/null 2>&1; then
+  eval "$(lesspipe)"
+fi
 # Don't send usage data to Eternal Terminal's developers (the client's default)
 command -v et >/dev/null 2>&1 && alias et='et --telemetry=false'
 # `fzf --bash` needs fzf 0.48 or later; older versions print nothing useful

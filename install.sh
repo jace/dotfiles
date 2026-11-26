@@ -6,8 +6,9 @@
 # or with wget: sh -c "$(wget -qO- https://raw.githubusercontent.com/jace/dotfiles/main/install.sh)"
 #
 # It asks before installing anything. Tools come from the system's package
-# manager first, then Homebrew, then Snap; when the chosen tier (see README.md)
-# has tools none of them can install, it offers to install Homebrew. Then it
+# manager first, then deb-get (on Debian and Ubuntu), then Homebrew, then Snap;
+# when the chosen tier (see README.md) has tools none of them can install, it
+# offers to install deb-get and then Homebrew. Then it
 # sets up the dotfiles with `chezmoi init`. Pass a tier to skip that question:
 #   sh install.sh [minimal|essential|recommended|toolbox]
 # Set DOTFILES_YES=1 to answer yes to every question (unattended installs).
@@ -105,12 +106,21 @@ detect_platform() {
     SYSTEM=pacman
   fi
 
-  # On Linux, Homebrew then Snap fill in what the system lacks (Homebrew first:
-  # fewer broken builds than Snap)
+  # On Linux, deb-get, Homebrew and then Snap fill in what the system lacks.
+  # deb-get first: its packages are .deb files that apt installs as root,
+  # resolving their dependencies with the system's, where Homebrew brings its
+  # own (its python3 can shadow the system's) and runs in the user's account.
+  # Homebrew comes before Snap for its fewer broken builds.
   EXTRA=
   if [ "$PLATFORM" = linux ]; then
-    find_brew && EXTRA=brew
-    have snap && EXTRA="$EXTRA snap"
+    [ "$SYSTEM" = apt ] && have deb-get && EXTRA="deb-get"
+    find_brew && EXTRA="${EXTRA:+$EXTRA }brew"
+    have snap && EXTRA="${EXTRA:+$EXTRA }snap"
+  fi
+  # deb-get reads GitHub's API, which allows few requests without a token
+  if [ -z "${DEBGET_TOKEN:-}" ] && have gh; then
+    DEBGET_TOKEN=$(gh auth token 2>/dev/null) || DEBGET_TOKEN=
+    [ -n "$DEBGET_TOKEN" ] && export DEBGET_TOKEN
   fi
 }
 
@@ -131,7 +141,7 @@ pkg_name() {
     apt:fd) echo fd-find ;;
     # Debian and Fedora ship lesspipe in the less package
     apt:lesspipe | dnf:lesspipe) echo less ;;
-    apt:dust) echo du-dust ;;
+    apt:dust | deb-get:dust) echo du-dust ;;
     apt:mtr) echo mtr-tiny ;;
     brew:7zip) echo sevenzip ;;
     dnf:7zip | pacman:7zip) echo p7zip ;;
@@ -144,6 +154,15 @@ pkg_name() {
 pkg_available() {
   case $1 in
     brew) brew info --formula "$2" >/dev/null 2>&1 ;;
+    deb-get)
+      # Packages for this machine's release and architecture, listed once.
+      # deb-get lists only installed packages until `deb-get update` has run.
+      if [ -z "${DEBGET_APPS:-}" ]; then
+        [ "$(deb-get list --raw 2>/dev/null | wc -l)" -gt 10 ] || deb-get update >/dev/null 2>&1
+        DEBGET_APPS=" $(deb-get list --raw 2>/dev/null | tr '\n' ' ') "
+      fi
+      case $DEBGET_APPS in *" $2 "*) true ;; *) false ;; esac
+      ;;
     snap) snap info "$2" >/dev/null 2>&1 ;;
     apt | pkg) apt-cache show "$2" >/dev/null 2>&1 ;;
     dnf) dnf info -q "$2" >/dev/null 2>&1 ;;
@@ -158,6 +177,13 @@ pkg_install() {
   shift
   case $manager in
     brew) brew install "$@" ;;
+    deb-get)
+      # One at a time: deb-get stops at the first package that fails. It runs
+      # as us and uses sudo itself, so it keeps DEBGET_TOKEN.
+      for deb in "$@"; do
+        deb-get install "$deb" || warn "deb-get couldn't install $deb"
+      done
+      ;;
     snap)
       # One at a time: some snaps need --classic (full access to the home folder)
       for snap in "$@"; do
@@ -204,10 +230,11 @@ installed() {
 }
 
 # Sort the missing tools in "$@" by the first package manager that has them,
-# with uv last for Python tools. Sets PLAN_SYSTEM, PLAN_BREW, PLAN_SNAP,
-# PLAN_UV (package names) and UNSOURCED (tools).
+# with uv last for Python tools. Sets PLAN_SYSTEM, PLAN_DEBGET, PLAN_BREW,
+# PLAN_SNAP, PLAN_UV (package names) and UNSOURCED (tools).
 plan_tools() {
   PLAN_SYSTEM=
+  PLAN_DEBGET=
   PLAN_BREW=
   PLAN_SNAP=
   PLAN_UV=
@@ -231,6 +258,7 @@ plan_tools() {
       "") UNSOURCED="$UNSOURCED $tool" ;;
       uv) PLAN_UV="$PLAN_UV $pkg" ;;
       "$SYSTEM") PLAN_SYSTEM="$PLAN_SYSTEM $pkg" ;;
+      deb-get) PLAN_DEBGET="$PLAN_DEBGET $pkg" ;;
       brew) PLAN_BREW="$PLAN_BREW $pkg" ;;
       snap) PLAN_SNAP="$PLAN_SNAP $pkg" ;;
     esac
@@ -248,6 +276,41 @@ brew_has() {
   else
     wget -q -O /dev/null "https://formulae.brew.sh/api/formula/$pkg.json" 2>/dev/null
   fi
+}
+
+# Whether deb-get's package list has a tool, asked of its repository since
+# deb-get isn't installed yet. The list doesn't say which architectures each
+# package supports; deb-get's own list does, once it's installed.
+debget_has() {
+  if [ -z "${DEBGET_MANIFEST:-}" ]; then
+    DEBGET_MANIFEST=" $(fetch https://raw.githubusercontent.com/wimpysworld/deb-get/main/01-main/manifest 2>/dev/null |
+      sed -e 1d -e '/^#/d' | tr '\n' ' ') "
+  fi
+  case $DEBGET_MANIFEST in *" $(pkg_name deb-get "$1") "*) true ;; *) false ;; esac
+}
+
+# Offer deb-get on Debian and Ubuntu when it would install tools that apt
+# doesn't have, chezmoi above all: a light way to get it, where Homebrew and
+# Snap are whole frameworks. Declining is fine: Homebrew and Snap come next.
+offer_debget() {
+  [ "$SYSTEM" = apt ] || return 1
+  have deb-get && return 1
+  from_debget=
+  for tool in $UNSOURCED; do
+    debget_has "$tool" && from_debget="$from_debget $tool"
+  done
+  [ -n "$from_debget" ] || return 1
+  say "deb-get has tools that apt doesn't:$from_debget"
+  say "  (it installs their makers' own .deb packages; update them with: deb-get upgrade)"
+  ask "Install deb-get (it asks for your password)?" || return 1
+  as_root apt-get install -y curl distro-info-data lsb-release wget jq || return 1
+  # deb-get installs itself, using sudo where it needs root
+  fetch https://raw.githubusercontent.com/wimpysworld/deb-get/main/deb-get | bash -s install deb-get || return 1
+  have deb-get || return 1
+  # Its package list stays empty until the first update
+  deb-get update >/dev/null 2>&1
+  EXTRA="deb-get${EXTRA:+ $EXTRA}"
+  return 0
 }
 
 # Offer Homebrew when it would install tools that nothing here has.
@@ -282,6 +345,11 @@ install_planned() {
     say "To install with $SYSTEM:$PLAN_SYSTEM"
     # shellcheck disable=SC2086
     ask "Install these?" && pkg_install "$SYSTEM" $PLAN_SYSTEM
+  fi
+  if [ -n "$PLAN_DEBGET" ]; then
+    say "To install with deb-get:$PLAN_DEBGET"
+    # shellcheck disable=SC2086
+    ask "Install these?" && pkg_install deb-get $PLAN_DEBGET
   fi
   if [ -n "$PLAN_BREW" ]; then
     say "To install with Homebrew:$PLAN_BREW"
@@ -323,6 +391,9 @@ install_tools() {
         plan_tools $tools
         ;;
     esac
+  fi
+  if [ -n "$UNSOURCED" ] && offer_debget; then
+    plan_tools $tools
   fi
   if [ -n "$UNSOURCED" ] && offer_brew; then
     plan_tools $tools

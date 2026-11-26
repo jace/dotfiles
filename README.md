@@ -10,7 +10,7 @@ One line, on any target platform:
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/jace/dotfiles/main/install.sh)"
 ```
 
-(or `wget -qO-` in place of `curl -fsSL`). It installs Chezmoi and the recommended tools from the list below, trying with the system's package manager first, then Homebrew if present, then Snap, and Python tools last with `uv tool install`. If the selected tier has tools none of them can install, it offers to install Homebrew. Declining skips those tools, and Chezmoi then comes from its own installer. Finally it sets up the dotfiles with `chezmoi init`, showing the changes before applying them. Prefix `DOTFILES_YES=1` to answer yes to all prompts.
+(or `wget -qO-` in place of `curl -fsSL`). It installs Chezmoi and the recommended tools from the list below, trying with the system's package manager first, then [deb-get](#deb-get) on Debian and Ubuntu, then Homebrew if present, then Snap, and Python tools last with `uv tool install`. If the selected tier has tools none of them can install, it offers to install deb-get (on Debian and Ubuntu) and then Homebrew. Declining skips those tools, and Chezmoi then comes from its own installer. Finally it sets up the dotfiles with `chezmoi init`, showing the changes before applying them. Prefix `DOTFILES_YES=1` to answer yes to all prompts.
 
 #### By hand
 
@@ -147,14 +147,14 @@ Missing: fq, grc, jc, numbat, resvg. btop is only in the root repository (`pkg i
 
 ### Debian 13 (trixie)
 
-Trixie packages most of the essential and recommended tiers. Eternal Terminal comes from its own repository. GitHub CLI's repository has newer versions:
+Trixie packages most of the essential and recommended tiers. Eternal Terminal and the latest GitHub CLI come from their own repositories:
 
 ```shell
 sudo mkdir -p /etc/apt/keyrings
 # Eternal Terminal
 curl -fsSL https://github.com/MisterTea/debian-et/raw/master/et.gpg | sudo tee /etc/apt/keyrings/et.gpg >/dev/null
 echo "deb [signed-by=/etc/apt/keyrings/et.gpg] https://mistertea.github.io/debian-et/debian-source/ $(. /etc/os-release && echo "$VERSION_CODENAME") main" | sudo tee /etc/apt/sources.list.d/et.list
-# GitHub CLI (optional: skip it to use Debian's older gh)
+# GitHub CLI (newer than Debian's)
 curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo tee /etc/apt/keyrings/githubcli-archive-keyring.gpg >/dev/null
 echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list
 # Install deb-packaged tools
@@ -163,21 +163,26 @@ sudo apt install git curl zsh tmux et ssh-import-id less rsync htop ncdu jq ripg
   eza broot fq gron jc glow git-delta lazygit du-dust duf procs btop hexyl numbat chafa timg resvg ffmpeg pandoc 7zip gh grc lsd
 ```
 
-Debian installs `bat` as `batcat` and `fd-find` as `fdfind`. The shell config aliases both back.  Get Chezmoi and the others from another package manager like Snap or Homebrew.
+Debian installs `bat` as `batcat` and `fd-find` as `fdfind`. The shell config aliases both back.
+
+Next, get Chezmoi and Yazi from [deb-get](#deb-get), and the rest from Homebrew or Snap.
 
 ### Ubuntu 26.04
 
-Ubuntu packages nearly all of the essential and recommended tiers in universe. Eternal Terminal comes from its PPA. GitHub CLI's repository has newer versions (see Debian notes):
+Ubuntu packages nearly all of the essential and recommended tiers in universe. Eternal Terminal comes from its PPA, GitHub CLI's latest version from its own repository.
 
 ```shell
 # Add the Eternal Terminal PPA (a release upgrade disables PPAs: run this again afterwards)
 sudo add-apt-repository ppa:jgmath2000/et
+# GitHub CLI (newer than Ubuntu's)
+curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo tee /etc/apt/keyrings/githubcli-archive-keyring.gpg >/dev/null
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list
 # Install deb-packaged tools
 sudo apt install git curl zsh tmux et ssh-import-id less rsync htop ncdu jq ripgrep fd-find bat fzf zoxide direnv \
   eza broot fq gron jc glow git-delta lazygit du-dust duf procs btop hexyl numbat chafa timg resvg ffmpeg pandoc 7zip gh grc lsd doxx
 ```
 
-Get Chezmoi and the others from another package manager like Snap or Homebrew.
+Next, get Chezmoi and Yazi from [deb-get](#deb-get), and the rest from Homebrew or Snap.
 
 ### Raspberry Pi OS and Armbian
 
@@ -185,8 +190,8 @@ Releases based on Debian trixie can follow the Debian section above. These instr
 
 ```shell
 sudo mkdir -p /etc/apt/keyrings
-# Add the GitHub CLI repository
-curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo tee /etc/apt/keyrings/githubcli-archive-keyring.gpg > /dev/null
+# GitHub CLI (bookworm's gh is too old)
+curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo tee /etc/apt/keyrings/githubcli-archive-keyring.gpg >/dev/null
 echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list
 # Add the Eternal Terminal repository
 echo "deb [signed-by=/etc/apt/keyrings/et.gpg] https://mistertea.github.io/debian-et/debian-source/ $(. /etc/os-release && echo "$VERSION_CODENAME") main" | sudo tee /etc/apt/sources.list.d/et.list
@@ -194,17 +199,40 @@ curl -fsSL https://github.com/MisterTea/debian-et/raw/master/et.gpg | sudo tee /
 # Add the Eza repository
 curl -fsSL https://raw.githubusercontent.com/eza-community/eza/main/deb.asc | sudo gpg --dearmor -o /etc/apt/keyrings/gierens.gpg
 echo "deb [signed-by=/etc/apt/keyrings/gierens.gpg] http://deb.gierens.de stable main" | sudo tee /etc/apt/sources.list.d/gierens.list
-# Add the Glow repository
-curl -fsSL https://repo.charm.sh/apt/gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/charm.gpg
-echo "deb [signed-by=/etc/apt/keyrings/charm.gpg] https://repo.charm.sh/apt/ * *" | sudo tee /etc/apt/sources.list.d/charm.list
 # Install deb-packaged tools
 sudo apt update
-sudo apt install 7zip bat btop chafa direnv et eza ffmpeg fd-find fq fzf gh glow gron hexyl jc jq lsd pandoc ripgrep timg zoxide zsh
+sudo apt install 7zip bat btop chafa direnv et eza ffmpeg fd-find fq gh gron hexyl jc jq pandoc ripgrep timg zoxide zsh
+```
+
+Get the rest from [deb-get](#deb-get) or Homebrew (see below). Bookworm's fzf (0.38) is too old for the shell config's key bindings, so take deb-get's:
+
+```shell
+deb-get install chezmoi du-dust duf fzf git-delta glow lsd numbat yazi
 ```
 
 ### Other package managers
 
-For the remaining tools or for the latest versions, use another package manager. I prefer Homebrew for:
+For the remaining tools or for the latest versions, use another package manager, listed here by order of preference.
+
+**Raspberry Pi:** Some packages may be broken due to builds using `jemalloc` with the wrong flags. I've encountered this across all of Snap, Homebrew and GitHub releases. Test your luck. Working builds need `DISABLE_JEMALLOC=1` ([source](https://www.home-assistant.io/installation/alternative#optimizations)) or `JEMALLOC_SYS_WITH_LG_PAGE=16` ([source](https://github.com/meilisearch/meilisearch/issues/1410#issuecomment-872410768)).
+
+#### deb-get
+
+[deb-get](https://github.com/wimpysworld/deb-get) installs the `.deb` packages that tools' makers publish on GitHub or in their own apt repositories, on Debian, Ubuntu and their derivatives (Raspberry Pi OS, Armbian). From these tiers it has chezmoi, yazi, glow, git-delta, du-dust, duf, numbat, lsd, jc, pandoc and rclone, plus newer builds of bat, fd, fzf and ripgrep than older releases ship.
+
+```shell
+# Install deb-get with deb-get
+sudo apt install curl distro-info-data lsb-release wget jq
+curl -sL https://raw.githubusercontent.com/wimpysworld/deb-get/main/deb-get | sudo -E bash -s install deb-get
+# Install tools
+deb-get install chezmoi yazi
+```
+
+Most of these are the `.deb` files from each tool's GitHub releases, which apt doesn't update: run `deb-get upgrade` for them. Glow is the exception: deb-get adds its apt repository, so `apt upgrade` updates it. Since `deb-get upgrade` is easy to forget, prefer apt and upstream apt repositories (as for et and gh above) wherever they have the tool. Over Homebrew, deb-get has two advantages: apt resolves its packages' dependencies with the system's, where Homebrew brings its own (its python3 can shadow the system's), and it installs as root instead of in your user account. It's also the light way to get chezmoi itself, where Homebrew and Snap are whole frameworks. deb-get reads GitHub's API, which allows 60 requests an hour without a token. For more, set `DEBGET_TOKEN`, for example to `$(gh auth token)`.
+
+#### Homebrew Linux
+
+I prefer Homebrew for:
 
 1. A larger selection of packages,
 2. Faster updates,
@@ -212,22 +240,6 @@ For the remaining tools or for the latest versions, use another package manager.
 4. Compile from source if the binary is broken or missing.
 
 …with one major downside: the package manager runs in your user account with no privilege separation.
-
-**Raspberry Pi:** Some packages may be broken due to builds using `jemalloc` with the wrong flags. I've encountered this across all of Snap, Homebrew and GitHub releases. Try your luck. Working builds need `DISABLE_JEMALLOC=1` ([source](https://www.home-assistant.io/installation/alternative#optimizations)) or `JEMALLOC_SYS_WITH_LG_PAGE=16` ([source](https://github.com/meilisearch/meilisearch/issues/1410#issuecomment-872410768)).
-
-#### Snap
-
-```shell
-# Install snap
-sudo apt install snapd
-# Install tools that need --classic
-sudo snap install chezmoi --classic
-sudo snap install yazi --classic
-```
-
-All other packages by just their names.
-
-#### Homebrew Linux
 
 ```shell
 # Install Homebrew
@@ -242,6 +254,18 @@ Homebrew offers the option to build from source but this requires the entire too
 ```shell
 brew install --build-from-source fd lazygit difftastic
 ```
+
+#### Snap
+
+```shell
+# Install snap
+sudo apt install snapd
+# Install tools that need --classic
+sudo snap install chezmoi --classic
+sudo snap install yazi --classic
+```
+
+Snap does better privilege separation but bloats your mount table and subtly breaks tools that don't expect containment.
 
 #### Ecosystem installers
 

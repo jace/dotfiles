@@ -207,7 +207,7 @@ sudo apt install 7zip bat btop chafa direnv et eza ffmpeg fd-find fq gh gron hex
 Get the rest from [deb-get](#deb-get) or Homebrew (see below). Bookworm's fzf (0.38) is too old for the shell config's key bindings, so take deb-get's:
 
 ```shell
-deb-get install chezmoi du-dust duf fzf git-delta glow lsd numbat yazi
+deb-get install chezmoi duf fzf git-delta glow lsd numbat yazi
 ```
 
 ### Other package managers

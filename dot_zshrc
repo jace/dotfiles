@@ -150,6 +150,16 @@ export LC_CTYPE="en_US.UTF-8"
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
+# Terminal title: user@host:folder (oh-my-zsh's default) only for a shell
+# reached over SSH or et outside tmux, where the title is what says which
+# machine this is. Otherwise just the folder: in tmux every pane is on the tmux
+# server's machine, which tmux's status line and outer title already show (and
+# tmux copies SSH_CONNECTION from whichever client attached last, so it can't
+# tell local from remote there). Must be set before oh-my-zsh loads.
+if [[ -n $TMUX || -z $SSH_CONNECTION ]]; then
+  ZSH_THEME_TERM_TITLE_IDLE="%~"
+  ZSH_THEME_TERM_TAB_TITLE_IDLE="%15<..<%~%<<"
+fi
 zstyle ':omz:plugins:iterm2' 'shell-integration' yes
 zstyle ':omz:plugins:eza' 'dirs-first' yes
 zstyle ':omz:plugins:eza' 'git-status' yes

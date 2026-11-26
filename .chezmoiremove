@@ -1,0 +1,4 @@
+# tmux plugins no longer used: the tpm plugin manager and the catppuccin theme
+# (tmux.conf has its own theme; chezmoi clones the plugins it uses)
+.config/tmux/plugins/tpm
+.config/tmux/themes

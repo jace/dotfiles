@@ -1,0 +1,10 @@
+#!/bin/sh
+# Make the dotfiles' Konsole profile the default, where Konsole is installed.
+# profile hash: {{ include "dot_local/share/konsole/Dotfiles.profile" | sha256sum }}
+command -v konsole >/dev/null 2>&1 || exit 0
+for kwrite in kwriteconfig6 kwriteconfig5; do
+  if command -v "$kwrite" >/dev/null 2>&1; then
+    "$kwrite" --file konsolerc --group "Desktop Entry" --key DefaultProfile Dotfiles.profile
+    exit 0
+  fi
+done

@@ -43,3 +43,20 @@ Library
 .config/tmux
 .config/tmux/**
 {{ end }}
+
+# Terminal configs only where that terminal is installed (on macOS the app may
+# not be on PATH)
+{{ if not (lookPath "konsole") }}
+.local/share/konsole
+.local/share/konsole/**
+{{ end }}
+{{ if not (or (lookPath "kitty") (stat "/Applications/kitty.app")) }}
+.config/kitty
+.config/kitty/**
+{{ end }}
+{{ if not (or (lookPath "ghostty") (stat "/Applications/Ghostty.app")) }}
+.config/ghostty
+.config/ghostty/**
+Library/Application Support/com.mitchellh.ghostty
+Library/Application Support/com.mitchellh.ghostty/**
+{{ end }}

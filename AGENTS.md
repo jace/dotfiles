@@ -72,6 +72,8 @@ Stock oh-my-zsh plugins print a warning at every shell start when their tool is 
 
 The fzf family (oh-my-zsh's `fzf` plugin for key bindings, plus the external `fzf-tab`, `fzf-tab-source` and `forgit`) loads through one guarded plugin, `dot_oh-my-zsh-custom/plugins/fzf/`, which shadows the stock `fzf` name and loads all four only when `fzf` is installed. Without fzf, `fzf-tab` and `forgit` load silently and then fail on use.
 
+Terminal configs (Konsole, kitty, Ghostty) deploy only where that terminal is installed (`lookPath`, or the app in `/Applications` on macOS), and `run_onchange_after_konsole-default-profile.sh` makes the `Dotfiles` profile Konsole's default. iTerm2's shell integration loads only when `LC_TERMINAL` is `iTerm2`, as its prompt marks (OSC 133) show up in other terminals' margins.
+
 `.chezmoiignore` skips the zsh and tmux config, and the git checkouts `.chezmoiexternal.toml` would clone for them, where `lookPath` doesn't find zsh or tmux. An external inside an ignored folder is only skipped if the pattern includes the folder's contents (`.oh-my-zsh-custom/**`, not just `.oh-my-zsh-custom`); check with `chezmoi managed --include externals`.
 
 Files sourced from the root of `~/.oh-my-zsh-custom/` (`*.zsh`) run after the plugins and must guard their own tools too (`unalias` included: an alias only exists if its plugin loaded).
